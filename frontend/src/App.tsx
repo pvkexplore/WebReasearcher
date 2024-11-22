@@ -5,7 +5,16 @@ import { SearchBar } from "./components/SearchBar";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { MessagesList } from "./components/MessagesList";
 import { ErrorMessage } from "./components/ErrorMessage";
-import { SearchSettings, Message, ResearchSession } from "./types";
+import { StrategicAnalysis } from "./components/StrategicAnalysis";
+import { ResearchControls } from "./components/ResearchControls";
+import { ResearchProgress } from "./components/ResearchProgress";
+import {
+  SearchSettings,
+  Message,
+  ResearchSession,
+  FocusArea,
+  AssessmentResult,
+} from "./types";
 
 const defaultSettings: SearchSettings = {
   maxAttempts: 5,
@@ -18,7 +27,11 @@ const defaultSettings: SearchSettings = {
   allowRetry: true,
 };
 
+const MAX_RECONNECT_ATTEMPTS = 3;
+const RECONNECT_DELAY = 2000;
+
 function App() {
+  // State
   const [expandedMessages, setExpandedMessages] = useState(true);
   const [hasResult, setHasResult] = useState(false);
   const [query, setQuery] = useState("");
@@ -28,152 +41,283 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [settings, setSettings] = useState<SearchSettings>(defaultSettings);
   const [showSettings, setShowSettings] = useState(false);
+  const [focusAreas, setFocusAreas] = useState<FocusArea[]>([]);
+  const [confidenceScore, setConfidenceScore] = useState(0);
+  const [currentFocus, setCurrentFocus] = useState<
+    { area: string; priority: number } | undefined
+  >();
+  const [sourcesAnalyzed, setSourcesAnalyzed] = useState(0);
+  const [documentContent, setDocumentContent] = useState<string | undefined>();
+  const [sources, setSources] = useState<string[]>([]);
+  const [isAssessing, setIsAssessing] = useState(false);
+  const [assessmentResult, setAssessmentResult] = useState<
+    AssessmentResult | undefined
+  >();
+
+  // Refs
   const wsRef = useRef<WebSocket | null>(null);
+  const reconnectAttempts = useRef(0);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
 
   const isProcessing = Boolean(
     session &&
       !hasResult &&
       (session.status === "starting" || session.status === "running")
   );
+  const [currentStage, setCurrentStage] = useState<string>("initializing");
 
-  const connectWebSocket = (sessionId: string, retryCount = 0) => {
-    const MAX_RETRIES = 3;
-    const RETRY_DELAY = 1000;
+  // WebSocket setup
+  const setupWebSocket = (sessionId: string) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      return;
+    }
 
-    return new Promise<void>((resolve, reject) => {
-      if (wsRef.current) {
-        try {
-          wsRef.current.close();
-        } catch (err) {
-          console.error("Error closing existing WebSocket:", err);
-        }
-        wsRef.current = null;
-        setIsConnected(false);
+    const ws = new WebSocket(`ws://localhost:8000/ws/${sessionId}`);
+    wsRef.current = ws;
+
+    ws.onopen = () => {
+      console.log("WebSocket connected");
+      setIsConnected(true);
+      setError(null);
+      reconnectAttempts.current = 0;
+    };
+
+    ws.onclose = (event) => {
+      console.log("WebSocket closed:", event);
+      setIsConnected(false);
+      wsRef.current = null;
+
+      // Attempt reconnection if session is active
+      if (session?.status === "running" || session?.status === "starting") {
+        handleReconnect(sessionId);
       }
+    };
 
-      try {
-        console.log(
-          `Creating WebSocket connection (attempt ${retryCount + 1})...`
-        );
-        const ws = new WebSocket(`ws://localhost:8000/ws/${sessionId}`);
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+      setError("WebSocket connection error");
+    };
 
-        const connectionTimeout = setTimeout(() => {
-          if (ws.readyState !== WebSocket.OPEN) {
-            console.log("WebSocket connection timeout");
-            ws.close();
-            reject(new Error("WebSocket connection timeout"));
-          }
-        }, 5000);
-
-        ws.onopen = () => {
-          console.log("WebSocket Connected");
-          clearTimeout(connectionTimeout);
-          setIsConnected(true);
-          setError(null);
-          resolve();
-        };
-
-        ws.onmessage = (event: MessageEvent) => {
-          try {
-            const data = JSON.parse(event.data);
-            console.log("Received message:", data);
-
-            if (data.type === "status" && data.data?.status) {
-              const newStatus = data.data.status;
-              setSession((prev) =>
-                prev ? { ...prev, status: newStatus } : null
-              );
-
-              if (newStatus === "completed" || newStatus === "stopped") {
-                ws.close();
-                wsRef.current = null;
-                setIsConnected(false);
-              }
-            }
-
-            if (data.type === "result") {
-              setExpandedMessages(false);
-              setHasResult(true);
-              setSession((prev) =>
-                prev ? { ...prev, status: "completed" } : null
-              );
-              ws.close();
-              wsRef.current = null;
-              setIsConnected(false);
-            }
-
-            setMessages((prev) => {
-              const newMessage = {
-                type: data.type,
-                message: data.message,
-                timestamp: data.timestamp || new Date().toISOString(),
-                data: data.data,
-              };
-
-              const isDuplicate = prev.some(
-                (msg) =>
-                  msg.type === newMessage.type &&
-                  msg.message === newMessage.message &&
-                  msg.timestamp === newMessage.timestamp
-              );
-
-              return isDuplicate ? prev : [...prev, newMessage];
-            });
-          } catch (err) {
-            console.error("Error processing message:", err);
-          }
-        };
-
-        ws.onclose = (event) => {
-          console.log("WebSocket Disconnected", event);
-          clearTimeout(connectionTimeout);
-          wsRef.current = null;
-          setIsConnected(false);
-
-          if (
-            retryCount < MAX_RETRIES &&
-            event.code !== 1000 &&
-            event.code !== 1001
-          ) {
-            console.log(`Retrying WebSocket connection in ${RETRY_DELAY}ms...`);
-            setTimeout(() => {
-              connectWebSocket(sessionId, retryCount + 1)
-                .then(resolve)
-                .catch(reject);
-            }, RETRY_DELAY);
-          } else {
-            setSession((prev) =>
-              prev ? { ...prev, status: "stopped" } : null
-            );
-            reject(new Error("WebSocket connection closed"));
-          }
-        };
-
-        ws.onerror = (error) => {
-          console.error("WebSocket Error:", error);
-          wsRef.current = null;
-        };
-
-        wsRef.current = ws;
-      } catch (err) {
-        console.error("Error creating WebSocket:", err);
-        if (retryCount < MAX_RETRIES) {
-          console.log(`Retrying WebSocket connection in ${RETRY_DELAY}ms...`);
-          setTimeout(() => {
-            connectWebSocket(sessionId, retryCount + 1)
-              .then(resolve)
-              .catch(reject);
-          }, RETRY_DELAY);
-        } else {
-          setError(
-            "Failed to create WebSocket connection after multiple attempts"
-          );
-          reject(err);
-        }
-      }
-    });
+    ws.onmessage = handleWebSocketMessage;
   };
 
+  const handleReconnect = (sessionId: string) => {
+    if (reconnectAttempts.current >= MAX_RECONNECT_ATTEMPTS) {
+      setError("Failed to reconnect to server");
+      return;
+    }
+
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+    }
+
+    reconnectTimeoutRef.current = setTimeout(() => {
+      reconnectAttempts.current++;
+      console.log(
+        `Attempting to reconnect (${reconnectAttempts.current}/${MAX_RECONNECT_ATTEMPTS})`
+      );
+      setupWebSocket(sessionId);
+    }, RECONNECT_DELAY);
+  };
+
+  // Handle WebSocket messages
+  const handleWebSocketMessage = (event: MessageEvent) => {
+    try {
+      const data = JSON.parse(event.data);
+      console.log("Received WebSocket message:", data);
+
+      switch (data.type) {
+        case "status":
+          handleStatusUpdate(data);
+          break;
+        case "analysis":
+          handleAnalysisUpdate(data);
+          break;
+        case "progress":
+          handleProgressUpdate(data);
+          break;
+        case "result":
+          handleResultUpdate(data);
+          break;
+        case "message":
+          handleMessageUpdate(data);
+          break;
+        case "error":
+          handleErrorUpdate(data);
+          break;
+      }
+    } catch (err) {
+      console.error("Error processing WebSocket message:", err);
+    }
+  };
+
+  const handleStatusUpdate = (data: any) => {
+    if (data.data?.status) {
+      setSession((prev) =>
+        prev ? { ...prev, status: data.data.status } : null
+      );
+
+      if (data.data.status === "completed" || data.data.status === "stopped") {
+        cleanupWebSocket();
+      }
+    }
+  };
+
+  const handleAnalysisUpdate = (data: any) => {
+    if (data.data) {
+      setFocusAreas(data.data.focus_areas || []);
+      setConfidenceScore(data.data.confidence_score || 0);
+    }
+  };
+
+  const handleProgressUpdate = (data: any) => {
+    if (data.data) {
+      setCurrentFocus(data.data.current_focus);
+      setSourcesAnalyzed(data.data.sources_analyzed);
+      setDocumentContent(data.data.document_content);
+      setSources(data.data.sources || []);
+      // Update current stage
+      if (data.data.stage) {
+        setCurrentStage(data.data.stage);
+      }
+    }
+  };
+
+  const handleResultUpdate = (data: any) => {
+    setExpandedMessages(false);
+    setHasResult(true);
+    setSession((prev) => (prev ? { ...prev, status: "completed" } : null));
+
+    // Add the result message to messages list
+    if (data.message || data.data) {
+      setMessages((prev) => {
+        const resultMessage = {
+          type: "result",
+          message: data.message || data.data?.result || "No result content",
+          timestamp: data.timestamp || new Date().toISOString(),
+          data: data.data,
+        };
+
+        // Check for duplicates
+        const isDuplicate = prev.some(
+          (msg) =>
+            msg.type === resultMessage.type &&
+            msg.message === resultMessage.message &&
+            msg.timestamp === resultMessage.timestamp
+        );
+
+        return isDuplicate ? prev : [...prev, resultMessage];
+      });
+    }
+
+    cleanupWebSocket();
+  };
+
+  const handleMessageUpdate = (data: any) => {
+    if (data.message || data.data) {
+      setMessages((prev) => {
+        const newMessage = {
+          type: data.type || "message",
+          message: data.message || "",
+          timestamp: data.timestamp || new Date().toISOString(),
+          data: data.data,
+        };
+
+        // Check for duplicates
+        const isDuplicate = prev.some(
+          (msg) =>
+            msg.type === newMessage.type &&
+            msg.message === newMessage.message &&
+            msg.timestamp === newMessage.timestamp
+        );
+
+        return isDuplicate ? prev : [...prev, newMessage];
+      });
+    }
+  };
+
+  const handleErrorUpdate = (data: any) => {
+    setError(data.message);
+    setSession((prev) => (prev ? { ...prev, status: "error" } : null));
+  };
+
+  const cleanupWebSocket = () => {
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+    setIsConnected(false);
+  };
+
+  // Research control functions
+  const handlePause = async () => {
+    if (!session?.sessionId) return;
+
+    try {
+      const response = await fetch(`/api/research/${session.sessionId}/pause`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to pause research");
+      }
+
+      setSession((prev) => (prev ? { ...prev, status: "paused" } : null));
+    } catch (err) {
+      console.error("Error pausing research:", err);
+      setError("Failed to pause research");
+    }
+  };
+
+  const handleResume = async () => {
+    if (!session?.sessionId) return;
+
+    try {
+      const response = await fetch(
+        `/api/research/${session.sessionId}/resume`,
+        {
+          method: "POST",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to resume research");
+      }
+
+      setSession((prev) => (prev ? { ...prev, status: "running" } : null));
+    } catch (err) {
+      console.error("Error resuming research:", err);
+      setError("Failed to resume research");
+    }
+  };
+
+  const handleAssess = async () => {
+    if (!session?.sessionId) return;
+
+    setIsAssessing(true);
+    try {
+      const response = await fetch(
+        `/api/research/${session.sessionId}/assess`,
+        {
+          method: "POST",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to assess research");
+      }
+
+      const result = await response.json();
+      setAssessmentResult(result);
+    } catch (err) {
+      console.error("Error assessing research:", err);
+      setError("Failed to assess research");
+    } finally {
+      setIsAssessing(false);
+    }
+  };
+
+  // Reset stage when starting new search
   const startResearch = async () => {
     if (!query.trim()) {
       setError("Please enter a query");
@@ -181,134 +325,97 @@ function App() {
     }
 
     try {
-      // Reset all state for a fresh start
+      // Reset state
       setSession(null);
       setIsConnected(false);
       setError(null);
       setMessages([]);
       setHasResult(false);
-      setExpandedMessages(true); // Reset to expanded state when starting new research
+      setExpandedMessages(true);
+      setFocusAreas([]);
+      setConfidenceScore(0);
+      setCurrentFocus(undefined);
+      setSourcesAnalyzed(0);
+      setDocumentContent(undefined);
+      setSources([]);
+      setAssessmentResult(undefined);
+      setCurrentStage("initializing"); // Reset stage
 
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
-      }
-
-      const requestData = {
-        query,
-        mode: settings.searchMode,
-        settings: {
-          maxAttempts: settings.maxAttempts,
-          maxResults: settings.maxResults,
-          timeRange: settings.timeRange,
-        },
-      };
-
-      const sessionResponse = await fetch(
-        "http://localhost:8000/research/start",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestData),
-        }
-      );
+      // Create session
+      const sessionResponse = await fetch("/api/research/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query,
+          mode: settings.searchMode,
+          settings: settings,
+        }),
+      });
 
       if (!sessionResponse.ok) {
-        const errorText = await sessionResponse.text();
-        throw new Error(errorText || "Failed to start research");
+        throw new Error(await sessionResponse.text());
       }
 
       const sessionData = await sessionResponse.json();
       const sessionId = sessionData.session_id;
 
-      try {
-        await connectWebSocket(sessionId);
-      } catch (err) {
-        throw new Error("Failed to establish WebSocket connection");
-      }
-
-      const beginResponse = await fetch(
-        `http://localhost:8000/research/${sessionId}/begin`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestData),
-        }
-      );
-
-      if (!beginResponse.ok) {
-        const errorText = await beginResponse.text();
-        throw new Error(errorText || "Failed to begin research");
-      }
-
+      // Set initial session state
       setSession({
-        sessionId: sessionId,
-        status: "starting",
-        query: query,
+        sessionId,
+        status: "pending",
+        query,
         messages: [],
-        settings: settings,
+        settings,
       });
+
+      // Setup WebSocket connection
+      setupWebSocket(sessionId);
     } catch (err) {
       console.error("Error starting research:", err);
       setError(err instanceof Error ? err.message : "Failed to start research");
       setSession(null);
       setIsConnected(false);
-      setHasResult(false);
-      setExpandedMessages(true); // Also reset on error
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
-      }
+      cleanupWebSocket();
     }
   };
 
-  const stopResearch = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!session) return;
+  const stopResearch = async () => {
+    if (!session?.sessionId) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:8000/research/${session.sessionId}/stop`,
-        { method: "POST" }
-      );
+      const response = await fetch(`/api/research/${session.sessionId}/stop`, {
+        method: "POST",
+      });
 
       if (!response.ok) {
         throw new Error("Failed to stop research");
       }
 
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
-      }
-
       setSession((prev) => (prev ? { ...prev, status: "stopped" } : null));
-      setIsConnected(false);
-      setExpandedMessages(true); // Reset expanded state when stopping
+      cleanupWebSocket();
+      setExpandedMessages(true);
     } catch (err) {
       console.error("Error stopping research:", err);
       setError("Failed to stop research");
     }
   };
 
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (wsRef.current) {
-        console.log("Cleaning up WebSocket connection");
-        wsRef.current.close();
-        wsRef.current = null;
+      cleanupWebSocket();
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
       }
     };
-  }, [session?.sessionId]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    startResearch();
-  };
-
-  const isStartDisabled =
-    !query.trim() ||
-    ((session?.status === "starting" || session?.status === "running") &&
-      isConnected);
+  }, []);
+  const showResearchComponents = Boolean(
+    session &&
+      !hasResult &&
+      session.status !== "completed" &&
+      session.status !== "stopped" &&
+      session.status !== "error"
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -330,13 +437,49 @@ function App() {
         <SearchBar
           query={query}
           onQueryChange={setQuery}
-          onSubmit={handleSubmit}
+          onSubmit={(e) => {
+            e.preventDefault();
+            startResearch();
+          }}
           onStop={stopResearch}
-          isStartDisabled={isStartDisabled}
+          isStartDisabled={
+            !query.trim() || (session?.status === "running" && isConnected)
+          }
           showStopButton={!!(session && isConnected)}
         />
 
         <ErrorMessage message={error} />
+
+        {/* Show progress for both research and basic search modes */}
+        {showResearchComponents && session && (
+          <>
+            {settings.searchMode === "research" && (
+              <>
+                <StrategicAnalysis
+                  focusAreas={focusAreas}
+                  confidenceScore={confidenceScore}
+                />
+
+                <ResearchControls
+                  status={session.status}
+                  onPause={handlePause}
+                  onResume={handleResume}
+                  onAssess={handleAssess}
+                  isAssessing={isAssessing}
+                  assessmentResult={assessmentResult}
+                />
+              </>
+            )}
+
+            <ResearchProgress
+              currentFocus={currentFocus}
+              sourcesAnalyzed={sourcesAnalyzed}
+              documentContent={documentContent}
+              sources={sources}
+              stage={currentStage}
+            />
+          </>
+        )}
 
         <MessagesList
           messages={messages}

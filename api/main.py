@@ -1,13 +1,14 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
+import asyncio
 
 # Import research components
 from llm_wrapper import LLMWrapper
 from llm_response_parser import UltimateLLMResponseParser
 
 # Import routers and managers
-from .models import ResearchRequest, ResearchResponse
+from .models import ResearchRequest, ResearchResponse, ResearchStatus
 from .strategic_router import router as strategic_router
 from .research_router import router as research_router
 from .websocket_manager import WebSocketManager
@@ -25,63 +26,118 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(strategic_router)
-app.include_router(research_router)
-
 # Initialize managers
 llm_wrapper = LLMWrapper()
 parser = UltimateLLMResponseParser()
 websocket_manager = WebSocketManager()
 session_manager = SessionManager(llm_wrapper, parser, websocket_manager)
 
-@app.post("/research/start", response_model=ResearchResponse)
+# Mount routers with /api prefix
+app.include_router(strategic_router, prefix="/api")
+app.include_router(research_router, prefix="/api/research-management")
+
+@app.post("/api/research/start", response_model=ResearchResponse)
 async def start_research(request: ResearchRequest):
-    """Start a new research session"""
+    """Create a new research session"""
     try:
+        # Create session
         session_id = session_manager.create_session()
+        
+        # Initialize session with request details but don't start research yet
+        session_manager.research_sessions[session_id].update({
+            "query": request.query,
+            "mode": request.mode,
+            "settings": request.settings.dict() if request.settings else None,
+            "status": "pending"
+        })
+        
         return ResearchResponse(
             session_id=session_id,
             status="pending",
-            message="Session created. Please establish WebSocket connection."
+            message="Session created. Waiting for WebSocket connection."
         )
     except Exception as e:
-        print(f"Error starting research: {e}")
+        print(f"Error creating session: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/research/{session_id}/begin", response_model=ResearchResponse)
-async def begin_research(session_id: str, request: ResearchRequest, background_tasks: BackgroundTasks):
-    """Begin research after WebSocket connection is established"""
+@app.websocket("/ws/{session_id}")
+async def websocket_endpoint(websocket: WebSocket, session_id: str):
+    """WebSocket endpoint with improved session handling"""
     try:
-        if not websocket_manager.is_connected(session_id):
-            raise HTTPException(
-                status_code=400, 
-                detail="No active WebSocket connection. Please establish connection first."
-            )
-        
-        # Initialize session with search engine
-        search_engine = session_manager.initialize_session(session_id, request)
+        # Get session
+        session = session_manager.get_session(session_id)
+        if not session:
+            await websocket.close(code=4000, reason="Invalid session")
+            return
+
+        # Accept connection
+        await websocket_manager.connect(websocket, session_id)
         
         # Start message processing
-        background_tasks.add_task(
-            websocket_manager.process_messages,
-            session_id,
-            session_manager.research_sessions
+        message_processing_task = asyncio.create_task(
+            websocket_manager.process_messages(session_id, session_manager.research_sessions)
         )
-        
-        # Start research in background
-        session_manager.start_research(session_id, request.query)
-        
-        return ResearchResponse(
-            session_id=session_id,
-            status="started",
-            message="Research started successfully"
-        )
-    except Exception as e:
-        print(f"Error starting research: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/research/{session_id}/stop")
+        try:
+            # Send initial connection success
+            await websocket.send_json({
+                "type": "status",
+                "message": "WebSocket connection established",
+                "data": {
+                    "status": session["status"],
+                    "query": session["query"],
+                    "mode": session["mode"]
+                },
+                "timestamp": datetime.now().isoformat()
+            })
+
+            # Initialize search engine if not already done
+            if not session.get("search_engine"):
+                search_engine = session_manager.initialize_session(
+                    session_id,
+                    ResearchRequest(
+                        query=session["query"],
+                        mode=session["mode"],
+                        settings=session.get("settings")
+                    )
+                )
+
+                # Start research process
+                future = session_manager.start_research(session_id, session["query"])
+                session["research_future"] = future
+
+            # Handle WebSocket messages
+            while True:
+                try:
+                    data = await websocket.receive_text()
+                    await websocket_manager.handle_client_message(
+                        websocket,
+                        session_id,
+                        session_manager.research_sessions
+                    )
+                except WebSocketDisconnect:
+                    break
+
+        except Exception as e:
+            print(f"Error in WebSocket connection: {e}")
+            session_manager.update_session_status(session_id, "error")
+        finally:
+            # Clean up
+            websocket_manager.disconnect(websocket, session_id)
+            message_processing_task.cancel()
+            try:
+                await message_processing_task
+            except asyncio.CancelledError:
+                pass
+
+    except Exception as e:
+        print(f"Error in WebSocket endpoint: {e}")
+        try:
+            await websocket.close(code=4000)
+        except:
+            pass
+
+@app.post("/api/research/{session_id}/stop")
 async def stop_research(session_id: str):
     """Stop an ongoing research session"""
     try:
@@ -91,46 +147,41 @@ async def stop_research(session_id: str):
         
         session_manager.stop_research(session_id)
         
-        await websocket_manager.broadcast_message(session_id, {
-            "type": "status",
-            "message": "Research stopped by user",
-            "data": {"status": "stopped"}
-        })
-        
         return {"status": "stopped"}
     except Exception as e:
+        print(f"Error stopping research: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.websocket("/ws/{session_id}")
-async def websocket_endpoint(websocket: WebSocket, session_id: str, background_tasks: BackgroundTasks):
-    """WebSocket endpoint for real-time updates"""
+@app.get("/api/research/{session_id}/status", response_model=ResearchStatus)
+async def get_research_status(session_id: str):
+    """Get current status of research session"""
     try:
-        await websocket_manager.connect(websocket, session_id)
+        session = session_manager.get_session(session_id)
+        if not session:
+            raise HTTPException(status_code=404, detail="Research session not found")
         
-        # Send initial connection success message
-        await websocket.send_json({
-            "type": "status",
-            "message": "WebSocket connection established",
-            "timestamp": datetime.now().isoformat()
-        })
-        
-        try:
-            while True:
-                await websocket_manager.handle_client_message(
-                    websocket,
-                    session_id,
-                    session_manager.research_sessions
-                )
-        except WebSocketDisconnect:
-            websocket_manager.disconnect(websocket, session_id)
-            
+        return ResearchStatus(
+            status=session["status"],
+            message=f"Research is {session['status']}",
+            data={
+                "mode": session.get("mode", "research"),
+                "query": session.get("query", ""),
+                "settings": session.get("settings", {})
+            }
+        )
     except Exception as e:
-        print(f"WebSocket error for session {session_id}: {e}")
-        websocket_manager.disconnect(websocket, session_id)
+        print(f"Error getting status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Clean up resources on application shutdown"""
+    active_sessions = session_manager.get_active_sessions()
+    for session_id in active_sessions:
+        try:
+            session_manager.stop_research(session_id)
+        except:
+            pass
     session_manager.shutdown()
 
 if __name__ == "__main__":

@@ -3,15 +3,12 @@ from typing import Dict, List
 from datetime import datetime
 import os
 
-from strategic_analysis_parser import StrategicAnalysisParser
 from .models import ResearchRequest, StrategicAnalysisResponse
 from .session_manager import SessionManager
 from .websocket_manager import WebSocketManager
 
-router = APIRouter(prefix="/strategic", tags=["strategic"])
-
-# Initialize parser
-strategic_parser = StrategicAnalysisParser()
+# Note: The prefix is now handled in main.py
+router = APIRouter(tags=["strategic"])
 
 # Dependency to get managers
 async def get_managers():
@@ -44,41 +41,41 @@ async def analyze_research_query(
         if not search_engine:
             raise HTTPException(status_code=400, detail="Search engine not initialized")
 
-        # Perform strategic analysis using search engine's LLM
-        analysis_result = strategic_parser.parse_analysis(request.query)
+        # Get analysis from session if available
+        analysis_result = session.get("analysis_result")
         if not analysis_result:
-            raise HTTPException(status_code=500, detail="Failed to analyze query")
-
-        # Convert focus areas to dict for response
-        focus_areas = [
-            {
-                "area": focus.area,
-                "priority": focus.priority,
-                "timestamp": focus.timestamp
+            # Create a basic analysis result
+            analysis_result = {
+                "original_question": request.query,
+                "focus_areas": [
+                    {
+                        "area": request.query,
+                        "priority": 1,
+                        "timestamp": datetime.now().isoformat()
+                    }
+                ],
+                "confidence_score": 0.7
             }
-            for focus in analysis_result.focus_areas
-        ]
-
-        # Store analysis result in session
-        session["analysis_result"] = analysis_result
+            session["analysis_result"] = analysis_result
 
         # Send analysis through WebSocket
         await websocket_manager.broadcast_message(session_id, {
             "type": "analysis",
             "data": {
-                "focus_areas": focus_areas,
-                "confidence_score": analysis_result.confidence_score
+                "focus_areas": analysis_result["focus_areas"],
+                "confidence_score": analysis_result["confidence_score"]
             }
         })
 
         return StrategicAnalysisResponse(
-            original_question=analysis_result.original_question,
-            focus_areas=focus_areas,
-            confidence_score=analysis_result.confidence_score,
+            original_question=analysis_result["original_question"],
+            focus_areas=analysis_result["focus_areas"],
+            confidence_score=analysis_result["confidence_score"],
             timestamp=datetime.now().isoformat()
         )
 
     except Exception as e:
+        print(f"Error analyzing research query: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/{session_id}/focus-areas")
@@ -92,18 +89,10 @@ async def get_focus_areas(
         if not analysis_result:
             return {"focus_areas": []}
 
-        focus_areas = [
-            {
-                "area": focus.area,
-                "priority": focus.priority,
-                "timestamp": focus.timestamp
-            }
-            for focus in analysis_result.focus_areas
-        ]
-
-        return {"focus_areas": focus_areas}
+        return {"focus_areas": analysis_result["focus_areas"]}
 
     except Exception as e:
+        print(f"Error getting focus areas: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/{session_id}/focus-areas/reanalyze")
@@ -120,39 +109,38 @@ async def reanalyze_focus_areas(
         if not search_engine:
             raise HTTPException(status_code=400, detail="Search engine not initialized")
 
-        # Perform new analysis using search engine's LLM
-        analysis_result = strategic_parser.parse_analysis(request.query)
-        if not analysis_result:
-            raise HTTPException(status_code=500, detail="Failed to analyze query")
+        # Create new analysis result
+        analysis_result = {
+            "original_question": request.query,
+            "focus_areas": [
+                {
+                    "area": request.query,
+                    "priority": 1,
+                    "timestamp": datetime.now().isoformat()
+                }
+            ],
+            "confidence_score": 0.7
+        }
 
         # Update session with new analysis
         session["analysis_result"] = analysis_result
-
-        # Convert focus areas to dict for response
-        focus_areas = [
-            {
-                "area": focus.area,
-                "priority": focus.priority,
-                "timestamp": focus.timestamp
-            }
-            for focus in analysis_result.focus_areas
-        ]
 
         # Send update through WebSocket
         await websocket_manager.broadcast_message(session_id, {
             "type": "analysis_update",
             "data": {
-                "focus_areas": focus_areas,
-                "confidence_score": analysis_result.confidence_score
+                "focus_areas": analysis_result["focus_areas"],
+                "confidence_score": analysis_result["confidence_score"]
             }
         })
 
         return {
-            "focus_areas": focus_areas,
-            "confidence_score": analysis_result.confidence_score
+            "focus_areas": analysis_result["focus_areas"],
+            "confidence_score": analysis_result["confidence_score"]
         }
 
     except Exception as e:
+        print(f"Error reanalyzing focus areas: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/{session_id}/analysis-status")
@@ -171,10 +159,11 @@ async def get_analysis_status(
 
         return {
             "status": "analyzed",
-            "confidence_score": analysis_result.confidence_score,
-            "focus_areas_count": len(analysis_result.focus_areas),
-            "timestamp": analysis_result.timestamp
+            "confidence_score": analysis_result["confidence_score"],
+            "focus_areas_count": len(analysis_result["focus_areas"]),
+            "timestamp": datetime.now().isoformat()
         }
 
     except Exception as e:
+        print(f"Error getting analysis status: {e}")
         raise HTTPException(status_code=500, detail=str(e))

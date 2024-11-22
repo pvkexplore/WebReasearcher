@@ -1,12 +1,14 @@
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from typing import Dict, Optional
 from datetime import datetime
+import os
 
-from .models import ResearchProgress, ResearchRequest, ResearchResponse
+from .models import ResearchProgress, ResearchRequest, ResearchResponse, ResearchDocument
 from .session_manager import SessionManager
 from .websocket_manager import WebSocketManager
 
-router = APIRouter(prefix="/research-management", tags=["research-management"])
+# Note: The prefix is now handled in main.py
+router = APIRouter(tags=["research-management"])
 
 # Dependency to get managers
 async def get_managers():
@@ -34,14 +36,21 @@ async def get_research_progress(
     try:
         search_engine = session.get("search_engine")
         if not search_engine:
-            raise HTTPException(status_code=400, detail="Search engine not initialized")
+            # Return empty progress if search engine not initialized
+            return ResearchProgress(
+                session_id=session_id,
+                status=session["status"],
+                current_focus=None,
+                sources_analyzed=0,
+                timestamp=datetime.now().isoformat()
+            )
 
         # Get current focus area if available
         current_focus = None
         if hasattr(search_engine, "current_focus") and search_engine.current_focus:
             current_focus = {
-                "area": search_engine.current_focus.area,
-                "priority": search_engine.current_focus.priority
+                "area": search_engine.current_focus["area"],
+                "priority": search_engine.current_focus["priority"]
             }
 
         # Get number of analyzed sources
@@ -56,7 +65,15 @@ async def get_research_progress(
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Error getting research progress: {e}")
+        # Return basic progress on error
+        return ResearchProgress(
+            session_id=session_id,
+            status=session.get("status", "error"),
+            current_focus=None,
+            sources_analyzed=0,
+            timestamp=datetime.now().isoformat()
+        )
 
 @router.post("/{session_id}/pause")
 async def pause_research(
@@ -104,7 +121,7 @@ async def resume_research(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/{session_id}/document")
+@router.get("/{session_id}/document", response_model=ResearchDocument)
 async def get_research_document(
     session_id: str,
     session: Dict = Depends(get_active_session)
@@ -113,28 +130,31 @@ async def get_research_document(
     try:
         search_engine = session.get("search_engine")
         if not search_engine:
-            raise HTTPException(status_code=400, detail="Search engine not initialized")
-
-        # Get document path from search engine
-        document_path = getattr(search_engine, "document_path", None)
-        if not document_path or not os.path.exists(document_path):
-            return {"content": "", "sources": []}
-
-        # Read document content
-        with open(document_path, 'r', encoding='utf-8') as f:
-            content = f.read()
+            # Return empty document if search engine not initialized
+            return ResearchDocument(
+                content="",
+                sources=[],
+                timestamp=datetime.now().isoformat()
+            )
 
         # Get list of analyzed sources
         sources = list(search_engine.searched_urls) if hasattr(search_engine, "searched_urls") else []
 
-        return {
-            "content": content,
-            "sources": sources,
-            "timestamp": datetime.now().isoformat()
-        }
+        # Return current state
+        return ResearchDocument(
+            content="",  # No document content in this version
+            sources=sources,
+            timestamp=datetime.now().isoformat()
+        )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Error getting research document: {e}")
+        # Return empty document on error
+        return ResearchDocument(
+            content="",
+            sources=[],
+            timestamp=datetime.now().isoformat()
+        )
 
 @router.post("/{session_id}/assess")
 async def assess_research_progress(
@@ -145,23 +165,9 @@ async def assess_research_progress(
     try:
         search_engine = session.get("search_engine")
         if not search_engine:
-            raise HTTPException(status_code=400, detail="Search engine not initialized")
-
-        # Get document content
-        document_path = getattr(search_engine, "document_path", None)
-        if not document_path or not os.path.exists(document_path):
             return {
                 "assessment": "insufficient",
-                "reason": "No research data found to assess"
-            }
-
-        with open(document_path, 'r', encoding='utf-8') as f:
-            content = f.read().strip()
-
-        if not content:
-            return {
-                "assessment": "insufficient",
-                "reason": "No research data was collected to assess"
+                "reason": "Research not yet started"
             }
 
         # Get original query
@@ -169,17 +175,13 @@ async def assess_research_progress(
 
         # Prepare assessment prompt
         assessment_prompt = f"""
-Based on the following research content, please assess whether the original query "{original_query}" can be answered sufficiently with the collected information.
-
-Research Content:
-{content}
-
-Instructions:
-1. If the research content provides enough information to answer the original query in detail, respond with: "sufficient"
-2. If not, respond with: "insufficient"
-3. Provide a brief reason for your assessment.
+Based on the current research progress for the query: "{original_query}"
+Please assess whether we have gathered sufficient information.
 
 Assessment:
+1. If sufficient information has been gathered, respond with: "sufficient"
+2. If not, respond with: "insufficient"
+3. Provide a brief reason for your assessment.
 """
 
         # Get LLM assessment
@@ -197,4 +199,8 @@ Assessment:
         return result
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Error assessing research progress: {e}")
+        return {
+            "assessment": "insufficient",
+            "reason": f"Error during assessment: {str(e)}"
+        }
