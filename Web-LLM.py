@@ -67,63 +67,6 @@ def print_header():
 
     Press CTRL+D (Linux/Mac) or CTRL+Z (Windows) to submit input.
     """ + Style.RESET_ALL)
-    
-def get_multiline_input() -> str:
-    """Get multiline input using raw terminal mode for reliable CTRL+D handling"""
-    print(f"{Fore.GREEN}📝 Enter your message (Press CTRL+D to submit):{Style.RESET_ALL}")
-    lines = []
-
-    import termios
-    import tty
-    import sys
-
-    # Save original terminal settings
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-
-    try:
-        # Set terminal to raw mode
-        tty.setraw(fd)
-
-        current_line = []
-        while True:
-            # Read one character at a time
-            char = sys.stdin.read(1)
-
-            # CTRL+D detection
-            if not char or ord(char) == 4:  # EOF or CTRL+D
-                sys.stdout.write('\n')  # New line for clean display
-                if current_line:
-                    lines.append(''.join(current_line))
-                return ' '.join(lines).strip()
-
-            # Handle special characters
-            elif ord(char) == 13:  # Enter
-                sys.stdout.write('\n')
-                lines.append(''.join(current_line))
-                current_line = []
-
-            elif ord(char) == 127:  # Backspace
-                if current_line:
-                    current_line.pop()
-                    sys.stdout.write('\b \b')  # Erase character
-
-            elif ord(char) == 3:  # CTRL+C
-                sys.stdout.write('\n')
-                return 'q'
-
-            # Normal character
-            elif 32 <= ord(char) <= 126:  # Printable characters
-                current_line.append(char)
-                sys.stdout.write(char)
-
-            # Flush output
-            sys.stdout.flush()
-
-    finally:
-        # Restore terminal settings
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        print()  # New line for clean display
 
 def initialize_system():
     """Initialize system with proper error checking"""
@@ -131,6 +74,8 @@ def initialize_system():
         print(Fore.YELLOW + "Initializing system..." + Style.RESET_ALL)
 
         llm_config = get_llm_config()
+        
+        # Validate based on LLM type
         if llm_config['llm_type'] == 'ollama':
             import requests
             try:
@@ -145,12 +90,24 @@ def initialize_system():
                     "\n2. Ollama server is running (try 'ollama serve')"
                     "\n3. The model specified in llm_config.py is pulled"
                 )
-        elif llm_config['llm_type'] == 'llama_cpp':
-            model_path = llm_config.get('model_path')
-            if not model_path or not os.path.exists(model_path):
-                raise FileNotFoundError(
-                    f"\nLLama.cpp model not found at: {model_path}"
-                    "\nPlease ensure model path in llm_config.py is correct"
+        elif llm_config['llm_type'] == 'openai':
+            import requests
+            try:
+                base_url = llm_config.get('base_url', '').rstrip('/')
+                headers = {"Content-Type": "application/json"}
+                if llm_config.get('api_key') and llm_config['api_key'].lower() != "not-needed":
+                    headers["Authorization"] = f"Bearer {llm_config['api_key']}"
+                response = requests.get(f"{base_url}/models", headers=headers, timeout=5)
+                if response.status_code != 200:
+                    raise ConnectionError(f"Cannot connect to OpenAI endpoint: {response.text}")
+            except requests.exceptions.RequestException as e:
+                raise ConnectionError(
+                    f"\nCannot connect to OpenAI endpoint!"
+                    f"\nPlease ensure:"
+                    f"\n1. The endpoint URL is correct: {base_url}"
+                    f"\n2. The server is running and accessible"
+                    f"\n3. API key configuration is correct (if required)"
+                    f"\nError: {str(e)}"
                 )
 
         with OutputRedirector() as output:
@@ -172,6 +129,19 @@ def initialize_system():
         logger.error(f"Error initializing system: {str(e)}", exc_info=True)
         print(Fore.RED + f"System initialization failed: {str(e)}" + Style.RESET_ALL)
         return None, None, None, None
+
+def handle_search_mode(search_engine, query):
+    """Handles search mode operations"""
+    print(f"{Fore.CYAN}Searching: {query}{Style.RESET_ALL}")
+    try:
+        result = search_engine.search_and_improve(query)
+        if result:
+            print(f"\n{Fore.GREEN}Search Result:{Style.RESET_ALL}")
+            print(result)
+        else:
+            print(f"{Fore.RED}No satisfactory results found.{Style.RESET_ALL}")
+    except Exception as e:
+        print(f"{Fore.RED}Search error: {str(e)}{Style.RESET_ALL}")
 
 def handle_research_mode(research_manager, query):
     """Handles research mode operations"""
@@ -198,7 +168,6 @@ def handle_research_mode(research_manager, query):
                         print(f"\n{Fore.CYAN}Current Focus:{Style.RESET_ALL}")
                         print(f"Area: {research_manager.current_focus.area}")
                         print(f"Priority: {research_manager.current_focus.priority}")
-                        print(f"Reasoning: {research_manager.current_focus.reasoning}")
                     else:
                         print(f"\n{Fore.YELLOW}No current focus area{Style.RESET_ALL}")
                 elif command == 'q':
@@ -229,6 +198,65 @@ def handle_research_mode(research_manager, query):
     except Exception as e:
         print(f"\n{Fore.RED}Research error: {str(e)}{Style.RESET_ALL}")
         research_manager.terminate_research()
+
+def get_multiline_input() -> str:
+    """Get multiline input with cross-platform support"""
+    print(f"{Fore.GREEN}📝 Enter your message (Press CTRL+D/CTRL+Z to submit):{Style.RESET_ALL}")
+    lines = []
+    
+    if os.name == 'nt':  # Windows
+        import msvcrt
+        current_line = []
+        while True:
+            if msvcrt.kbhit():
+                char = msvcrt.getwch()
+                
+                # CTRL+Z
+                if char == '\x1a':
+                    print()  # New line for clean display
+                    if current_line:
+                        lines.append(''.join(current_line))
+                    return ' '.join(lines).strip()
+                
+                # Enter
+                elif char == '\r':
+                    print()  # New line
+                    if current_line:  # Only add non-empty lines
+                        lines.append(''.join(current_line))
+                    current_line = []
+                    if not current_line:  # Empty line (just Enter pressed)
+                        break
+                
+                # Backspace
+                elif char == '\x08':
+                    if current_line:
+                        current_line.pop()
+                        print('\b \b', end='', flush=True)
+                
+                # CTRL+C
+                elif char == '\x03':
+                    print("\nOperation cancelled")
+                    sys.exit(0)
+                
+                # Normal character
+                elif 32 <= ord(char) <= 126:
+                    current_line.append(char)
+                    print(char, end='', flush=True)
+    else:  # Unix-like systems
+        try:
+            while True:
+                line = input()
+                if line:  # Only add non-empty lines
+                    lines.append(line)
+                if not line:  # Empty line (just Enter pressed)
+                    break
+        except EOFError:  # Ctrl+D pressed
+            pass
+        except KeyboardInterrupt:  # Ctrl+C pressed
+            print("\nOperation cancelled")
+            sys.exit(0)
+
+    return ' '.join(lines).strip()
 
 def main():
     print_header()

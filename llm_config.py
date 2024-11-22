@@ -1,23 +1,6 @@
 # llm_config.py
 
-LLM_TYPE = "ollama"  # Options: 'llama_cpp', 'ollama'
-
-# LLM settings for llama_cpp
-MODEL_PATH = "/home/james/llama.cpp/models/gemma-2-9b-it-Q6_K.gguf" # Replace with your llama.cpp models filepath
-
-LLM_CONFIG_LLAMA_CPP = {
-    "llm_type": "llama_cpp",
-    "model_path": MODEL_PATH,
-    "n_ctx": 20000,  # context size
-    "n_gpu_layers": 0,  # number of layers to offload to GPU (-1 for all, 0 for none)
-    "n_threads": 8,  # number of threads to use
-    "temperature": 0.7,  # temperature for sampling
-    "top_p": 0.9,  # top p for sampling
-    "top_k": 40,  # top k for sampling
-    "repeat_penalty": 1.1,  # repeat penalty
-    "max_tokens": 1024,  # max tokens to generate
-    "stop": ["User:", "\n\n"]  # stop sequences
-}
+LLM_TYPE = "openai"  # Options: 'ollama', 'openai'
 
 # LLM settings for Ollama
 LLM_CONFIG_OLLAMA = {
@@ -31,10 +14,23 @@ LLM_CONFIG_OLLAMA = {
     "stop": ["User:", "\n\n"]
 }
 
+# LLM settings for OpenAI-compatible endpoint
+LLM_CONFIG_OPENAI = {
+    "llm_type": "openai",
+    "base_url": "http://192.168.29.13:1234/v1",  # Local OpenAI-compatible endpoint
+    "model_name": "local-model",  # Model name for the local endpoint
+    "api_key": "not-needed",  # Can be any string for local endpoints
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_tokens": 1024,
+    "n_ctx": 50000,
+    "stop": ["User:", "\n\n"]
+}
+
 def get_llm_config():
-    if LLM_TYPE == "llama_cpp":
-        return LLM_CONFIG_LLAMA_CPP
-    elif LLM_TYPE == "ollama":
+    if LLM_TYPE == "ollama":
         return LLM_CONFIG_OLLAMA
+    elif LLM_TYPE == "openai":
+        return LLM_CONFIG_OPENAI
     else:
         raise ValueError(f"Invalid LLM_TYPE: {LLM_TYPE}")

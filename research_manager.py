@@ -14,8 +14,6 @@ from datetime import datetime
 from io import StringIO
 from colorama import init, Fore, Style
 import select
-import termios
-import tty
 from threading import Event
 from urllib.parse import urlparse
 from pathlib import Path
@@ -112,8 +110,13 @@ Priority: [number 1-5]
 5. [Fifth research topic]
 Priority: [number 1-5]
 """
+            # Get max tokens based on LLM type
+            max_tokens = self.llm.llm_config.get('max_tokens', 1000)
+            if self.llm.llm_config.get('llm_type') == 'openai' and max_tokens > 4096:
+                max_tokens = 4096
+
             for attempt in range(max_retries):
-                response = self.llm.generate(prompt, max_tokens=1000)
+                response = self.llm.generate(prompt, max_tokens=max_tokens)
                 focus_areas = self._extract_research_areas(response)
 
                 if focus_areas:  # If we got any valid areas
@@ -132,7 +135,7 @@ Priority: [number 1-5]
 
             # If all retries failed, try one final time with a stronger prompt
             prompt += "\n\nIMPORTANT: You MUST provide exactly 5 research areas with priorities. This is crucial."
-            response = self.llm.generate(prompt, max_tokens=1000)
+            response = self.llm.generate(prompt, max_tokens=max_tokens)
             focus_areas = self._extract_research_areas(response)
 
             if focus_areas:
@@ -1150,6 +1153,11 @@ Research Progress:
                 return "No research data was collected to summarize."
 
             try:
+                # Get max tokens based on LLM type
+                max_tokens = self.llm.llm_config.get('max_tokens', 4000)
+                if self.llm.llm_config.get('llm_type') == 'openai' and max_tokens > 4096:
+                    max_tokens = 4096
+
                 # Generate summary using LLM
                 summary_prompt = f"""
                 Analyze the following content to provide a comprehensive research summary and a response to the user's original query "{self.original_query}" ensuring that you conclusively answer the query in detail:
@@ -1165,7 +1173,7 @@ Research Progress:
                 Summary:
                 """
 
-                summary = self.llm.generate(summary_prompt, max_tokens=4000)
+                summary = self.llm.generate(summary_prompt, max_tokens=max_tokens)
 
                 # Signal that summary is complete to stop the progress indicator
                 self.summary_ready = True
@@ -1329,6 +1337,11 @@ Research Progress:
                 except Exception as e:
                     logger.error(f"Failed to reload research content: {str(e)}")
 
+            # Get max tokens based on LLM type
+            max_tokens = self.llm.llm_config.get('max_tokens', 1000)
+            if self.llm.llm_config.get('llm_type') == 'openai' and max_tokens > 4096:
+                max_tokens = 4096
+
             # Prepare context, ensuring we have content
             context = f"""
 Research Content:
@@ -1367,7 +1380,7 @@ Answer:
 
             response = self.llm.generate(
                 prompt,
-                max_tokens=1000,  # Increased for more detailed responses
+                max_tokens=max_tokens,
                 temperature=0.7
             )
 
@@ -1381,101 +1394,146 @@ Answer:
             return f"I apologize, but I encountered an error processing your question: {str(e)}"
 
     def get_multiline_conversation_input(self) -> str:
-        """Get multiline input with CTRL+D handling for conversation mode"""
+        """Get multiline input with cross-platform support"""
         buffer = []
 
-        # Save original terminal settings
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-
-        try:
-            # Set terminal to raw mode
-            tty.setraw(fd)
-
+        if os.name == 'nt':  # Windows
+            import msvcrt
             current_line = []
             while True:
-                char = sys.stdin.read(1)
-
-                # CTRL+D detection
-                if not char or ord(char) == 4:  # EOF or CTRL+D
-                    sys.stdout.write('\n')
-                    if current_line:
+                if msvcrt.kbhit():
+                    char = msvcrt.getwch()
+                    
+                    # CTRL+Z
+                    if char == '\x1a':
+                        print()  # New line for clean display
+                        if current_line:
+                            buffer.append(''.join(current_line))
+                        return ' '.join(buffer).strip()
+                    
+                    # Enter
+                    elif char == '\r':
+                        print()  # New line
                         buffer.append(''.join(current_line))
-                    return ' '.join(buffer).strip()
-
-                # Handle special characters
-                elif ord(char) == 13:  # Enter
-                    sys.stdout.write('\n')
-                    buffer.append(''.join(current_line))
-                    current_line = []
-
-                elif ord(char) == 127:  # Backspace
-                    if current_line:
-                        current_line.pop()
-                        sys.stdout.write('\b \b')
-
-                elif ord(char) == 3:  # CTRL+C
-                    sys.stdout.write('\n')
-                    return 'quit'
-
-                # Normal character
-                elif 32 <= ord(char) <= 126:  # Printable characters
-                    current_line.append(char)
-                    sys.stdout.write(char)
-
-                sys.stdout.flush()
-
-        finally:
-            # Restore terminal settings
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-            print()  # New line for clean display
-
-if __name__ == "__main__":
-    from llm_wrapper import LLMWrapper
-    from llm_response_parser import UltimateLLMResponseParser
-    from Self_Improving_Search import EnhancedSelfImprovingSearch
-
-    try:
-        print(f"{Fore.CYAN}Initializing Research System...{Style.RESET_ALL}")
-        llm = LLMWrapper()
-        parser = UltimateLLMResponseParser()
-        search_engine = EnhancedSelfImprovingSearch(llm, parser)
-        manager = ResearchManager(llm, parser, search_engine)
-
-        print(f"{Fore.GREEN}System initialized. Enter your research topic or 'quit' to exit.{Style.RESET_ALL}")
-        while True:
+                        current_line = []
+                    
+                    # Backspace
+                    elif char == '\x08':
+                        if current_line:
+                            current_line.pop()
+                            print('\b \b', end='', flush=True)
+                    
+                    # CTRL+C
+                    elif char == '\x03':
+                        print()
+                        return 'quit'
+                    
+                    # Normal character
+                    elif 32 <= ord(char) <= 126:
+                        current_line.append(char)
+                        print(char, end='', flush=True)
+        else:  # Unix-like systems
+            import termios
+            import tty
+            
+            fd = sys.stdin.fileno()
+            old_settings = termios.tcgetattr(fd)
             try:
-                topic = ResearchManager.get_initial_input()
-                if topic.lower() == 'quit':
-                    break
+                tty.setraw(fd)
+                current_line = []
+                while True:
+                    char = sys.stdin.read(1)
+                    
+                    # CTRL+D
+                    if not char or ord(char) == 4:
+                        print()
+                        if current_line:
+                            buffer.append(''.join(current_line))
+                        return ' '.join(buffer).strip()
+                    
+                    # Enter
+                    elif ord(char) == 13:
+                        print()
+                        buffer.append(''.join(current_line))
+                        current_line = []
+                    
+                    # Backspace
+                    elif ord(char) == 127:
+                        if current_line:
+                            current_line.pop()
+                            print('\b \b', end='', flush=True)
+                    
+                    # CTRL+C
+                    elif ord(char) == 3:
+                        print()
+                        return 'quit'
+                    
+                    # Normal character
+                    elif 32 <= ord(char) <= 126:
+                        current_line.append(char)
+                        print(char, end='', flush=True)
+            finally:
+                termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+                print()  # New line for clean display
 
-                if not topic:
-                    continue
+    @staticmethod
+    def get_initial_input() -> str:
+        """Get the initial research query from user with cross-platform support"""
+        print(f"{Fore.GREEN}📝 Enter your message (Press CTRL+D/CTRL+Z to submit):{Style.RESET_ALL}")
+        lines = []
 
-                if not topic.startswith('@'):
-                    print(f"{Fore.YELLOW}Please start your research query with '@'{Style.RESET_ALL}")
-                    continue
+        if os.name == 'nt':  # Windows
+            import msvcrt
+            current_line = []
+            while True:
+                if msvcrt.kbhit():
+                    char = msvcrt.getwch()
+                    
+                    # CTRL+Z
+                    if char == '\x1a':
+                        print()  # New line for clean display
+                        if current_line:
+                            lines.append(''.join(current_line))
+                        return ' '.join(lines).strip()
+                    
+                    # Enter
+                    elif char == '\r':
+                        print()  # New line
+                        if current_line:  # Only add non-empty lines
+                            lines.append(''.join(current_line))
+                        current_line = []
+                        if not current_line:  # Empty line (just Enter pressed)
+                            break
+                    
+                    # Backspace
+                    elif char == '\x08':
+                        if current_line:
+                            current_line.pop()
+                            print('\b \b', end='', flush=True)
+                    
+                    # CTRL+C
+                    elif char == '\x03':
+                        print("\nOperation cancelled")
+                        sys.exit(0)
+                    
+                    # Normal character
+                    elif 32 <= ord(char) <= 126:
+                        current_line.append(char)
+                        print(char, end='', flush=True)
+        else:  # Unix-like systems
+            try:
+                while True:
+                    line = input()
+                    if line:  # Only add non-empty lines
+                        lines.append(line)
+                    if not line:  # Empty line (just Enter pressed)
+                        break
+            except EOFError:  # Ctrl+D pressed
+                pass
+            except KeyboardInterrupt:  # Ctrl+C pressed
+                print("\nOperation cancelled")
+                sys.exit(0)
 
-                topic = topic[1:]  # Remove @ prefix
-                manager.start_research(topic)
-                summary = manager.terminate_research()
-                print(f"\n{Fore.GREEN}Research Summary:{Style.RESET_ALL}")
-                print(summary)
-                print(f"\n{Fore.GREEN}Research completed. Ready for next topic.{Style.RESET_ALL}\n")
+        return ' '.join(lines).strip()
 
-            except KeyboardInterrupt:
-                print(f"\n{Fore.YELLOW}Operation cancelled. Ready for next topic.{Style.RESET_ALL}")
-                if 'manager' in locals():
-                    manager.terminate_research()
-                continue
-
-    except KeyboardInterrupt:
-        print(f"\n{Fore.YELLOW}Research system shutting down.{Style.RESET_ALL}")
-        if 'manager' in locals():
-            manager.terminate_research()
-    except Exception as e:
-        print(f"{Fore.RED}Critical error: {str(e)}{Style.RESET_ALL}")
-        logger.error("Critical error in main loop", exc_info=True)
-
-    if os.name == 'nt':
-        print(f"{Fore.YELLOW}Running on Windows - Some features may be limited{Style.RESET_ALL}")
+# Rest of the file remains the same

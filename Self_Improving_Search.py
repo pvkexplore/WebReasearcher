@@ -421,8 +421,22 @@ If appropriate, suggest ways the user might refine their question or where they 
 Respond in a clear, concise, and informative manner.
 """
         try:
+            # Handle token limits based on LLM type
+            max_tokens = self.llm_config.get('max_tokens', 1024)
+            if self.llm_config.get('llm_type') == 'openai' and max_tokens > 4096:
+                max_tokens = 4096
+
+            # Validate stop sequences
+            stop_sequences = self.llm_config.get('stop', None)
+            if stop_sequences and not isinstance(stop_sequences, list):
+                stop_sequences = None
+
             with OutputRedirector() as output:
-                response_text = self.llm.generate(prompt, max_tokens=self.llm_config.get('max_tokens', 1024), stop=self.llm_config.get('stop', None))
+                response_text = self.llm.generate(
+                    prompt, 
+                    max_tokens=max_tokens,
+                    stop=stop_sequences
+                )
             llm_output = output.getvalue()
             logger.info(f"LLM Output in synthesize_final_answer:\n{llm_output}")
             if response_text:
@@ -431,4 +445,4 @@ Respond in a clear, concise, and informative manner.
             logger.error(f"Error in synthesize_final_answer: {str(e)}", exc_info=True)
         return "I apologize, but after multiple attempts, I wasn't able to find a satisfactory answer to your question. Please try rephrasing your question or breaking it down into smaller, more specific queries."
 
-# End of EnhancedSelfImprovingSearch class
+# Rest of the file remains the same
