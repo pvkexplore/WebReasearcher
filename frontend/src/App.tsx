@@ -64,43 +64,6 @@ function App() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const stopResearch = async () => {
-    if (!session) return;
-
-    try {
-      // Stop research on the server
-      const response = await fetch(
-        `http://localhost:8000/research/${session.sessionId}/stop`,
-        {
-          method: "POST",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to stop research");
-      }
-
-      // Close WebSocket connection
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
-      }
-
-      // Update session status
-      setSession((prev) =>
-        prev
-          ? {
-              ...prev,
-              status: "stopped",
-            }
-          : null
-      );
-    } catch (err) {
-      console.error("Error stopping research:", err);
-      setError("Failed to stop research");
-    }
-  };
   const connectWebSocket = (sessionId: string, retryCount = 0) => {
     const MAX_RETRIES = 3;
     const RETRY_DELAY = 1000; // 1 second
@@ -140,21 +103,44 @@ function App() {
           resolve();
         };
 
-        ws.onmessage = (event) => {
+        ws.onmessage = (event: MessageEvent) => {
           try {
             const data = JSON.parse(event.data);
             console.log("Received message:", data);
 
             // Update session status if status message received
             if (data.type === "status" && data.data?.status) {
+              const newStatus = data.data.status;
               setSession((prev) =>
                 prev
                   ? {
                       ...prev,
-                      status: data.data.status,
+                      status: newStatus,
                     }
                   : null
               );
+
+              // If research is completed or stopped, close the connection
+              if (newStatus === "completed" || newStatus === "stopped") {
+                ws.close();
+                wsRef.current = null;
+                setIsConnected(false);
+              }
+            }
+
+            // If we receive a result message, consider it completed
+            if (data.type === "result") {
+              setSession((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      status: "completed",
+                    }
+                  : null
+              );
+              ws.close();
+              wsRef.current = null;
+              setIsConnected(false);
             }
 
             // Add message to messages list
@@ -249,9 +235,17 @@ function App() {
     }
 
     try {
-      // Clear any existing error and messages
+      // Reset all state for a fresh start
+      setSession(null);
+      setIsConnected(false);
       setError(null);
       setMessages([]);
+
+      // Close any existing WebSocket connection
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
 
       console.log("Starting research with query:", query);
       console.log("Settings:", settings);
@@ -343,6 +337,45 @@ function App() {
     }
   };
 
+  const stopResearch = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
+    if (!session) return;
+
+    try {
+      // Stop research on the server
+      const response = await fetch(
+        `http://localhost:8000/research/${session.sessionId}/stop`,
+        {
+          method: "POST",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to stop research");
+      }
+
+      // Close WebSocket connection
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+
+      // Update session status and reset connection state
+      setSession((prev) =>
+        prev
+          ? {
+              ...prev,
+              status: "stopped",
+            }
+          : null
+      );
+      setIsConnected(false);
+    } catch (err) {
+      console.error("Error stopping research:", err);
+      setError("Failed to stop research");
+    }
+  };
+
   // Cleanup WebSocket on unmount
   useEffect(() => {
     return () => {
@@ -363,7 +396,13 @@ function App() {
     setSettings(defaultSettings);
   };
 
-  const isStartDisabled = !query.trim() || (session !== null && isConnected);
+  // Check if research is in progress
+  const isResearchInProgress =
+    (session?.status === "starting" || session?.status === "running") &&
+    isConnected;
+
+  // Update isStartDisabled to handle completed state
+  const isStartDisabled = !query.trim() || isResearchInProgress;
 
   const getStatusColor = () => {
     if (!session) return "bg-gray-500";
@@ -373,6 +412,7 @@ function App() {
       case "running":
         return "bg-green-500";
       case "stopped":
+      case "completed":
         return "bg-red-500";
       default:
         return "bg-gray-500";
