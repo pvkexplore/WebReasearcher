@@ -1,7 +1,7 @@
 import time
 import re
 import os
-from typing import List, Dict, Tuple, Union
+from typing import List, Dict, Tuple, Union, Protocol, Optional
 from colorama import Fore, Style
 import logging
 import sys
@@ -11,6 +11,9 @@ from llm_config import get_llm_config
 from llm_response_parser import UltimateLLMResponseParser
 from llm_wrapper import LLMWrapper
 from urllib.parse import urlparse
+from dataclasses import dataclass
+from datetime import datetime
+
 
 # Set up logging
 log_directory = 'logs'
@@ -49,94 +52,114 @@ class OutputRedirector:
         sys.stdout = self.original_stdout
         sys.stderr = self.original_stderr
 
+@dataclass
+class SearchMessage:
+    """Message structure for search process events"""
+    type: str  # 'info', 'error', 'result', 'status'
+    message: str
+    timestamp: str = ""
+    data: Optional[Dict] = None
+
+    def __post_init__(self):
+        if not self.timestamp:
+            self.timestamp = datetime.now().isoformat()
+
+class MessageHandler(Protocol):
+    """Protocol for handling search process messages"""
+    def handle_message(self, message: SearchMessage) -> None:
+        """Handle a search process message"""
+        ...
+
+class DefaultMessageHandler:
+    """Default implementation that prints messages to console"""
+    def handle_message(self, message: SearchMessage) -> None:
+        if message.type == 'error':
+            print(f"{Fore.RED}{message.message}{Style.RESET_ALL}")
+        elif message.type == 'result':
+            print(f"{Fore.GREEN}{message.message}{Style.RESET_ALL}")
+        else:
+            print(message.message)
+
 class EnhancedSelfImprovingSearch:
-    def __init__(self, llm: LLMWrapper, parser: UltimateLLMResponseParser, max_attempts: int = 5):
+    def __init__(self, llm: LLMWrapper, parser: UltimateLLMResponseParser, message_handler: Optional[MessageHandler] = None, max_attempts: int = 5):
         self.llm = llm
         self.parser = parser
         self.max_attempts = max_attempts
         self.llm_config = get_llm_config()
+        self.message_handler = message_handler or DefaultMessageHandler()
 
-    @staticmethod
-    def initialize_llm():
-        llm_wrapper = LLMWrapper()
-        return llm_wrapper
-
-    def print_thinking(self):
-        print(Fore.MAGENTA + "🧠 Thinking..." + Style.RESET_ALL)
-
-    def print_searching(self):
-        print(Fore.MAGENTA + "📝 Searching..." + Style.RESET_ALL)
+    def send_message(self, type: str, message: str, data: Optional[Dict] = None) -> None:
+        """Send a message through the message handler"""
+        msg = SearchMessage(type=type, message=message, data=data)
+        self.message_handler.handle_message(msg)
 
     def search_and_improve(self, user_query: str) -> str:
         attempt = 0
         while attempt < self.max_attempts:
-            print(f"\n{Fore.CYAN}Search attempt {attempt + 1}:{Style.RESET_ALL}")
-            self.print_searching()
+            self.send_message("info", f"\nSearch attempt {attempt + 1}:")
+            self.send_message("info", "📝 Searching...")
 
             try:
                 formulated_query, time_range = self.formulate_query(user_query, attempt)
-
-                print(f"{Fore.YELLOW}Original query: {user_query}{Style.RESET_ALL}")
-                print(f"{Fore.YELLOW}Formulated query: {formulated_query}{Style.RESET_ALL}")
-                print(f"{Fore.YELLOW}Time range: {time_range}{Style.RESET_ALL}")
+                self.send_message("info", f"Original query: {user_query}")
+                self.send_message("info", f"Formulated query: {formulated_query}")
+                self.send_message("info", f"Time range: {time_range}")
 
                 if not formulated_query:
-                    print(f"{Fore.RED}Error: Empty search query. Retrying...{Style.RESET_ALL}")
+                    self.send_message("error", "Error: Empty search query. Retrying...")
                     attempt += 1
                     continue
 
                 search_results = self.perform_search(formulated_query, time_range)
-
                 if not search_results:
-                    print(f"{Fore.RED}No results found. Retrying with a different query...{Style.RESET_ALL}")
+                    self.send_message("error", "No results found. Retrying with a different query...")
                     attempt += 1
                     continue
 
                 self.display_search_results(search_results)
-
                 selected_urls = self.select_relevant_pages(search_results, user_query)
 
                 if not selected_urls:
-                    print(f"{Fore.RED}No relevant URLs found. Retrying...{Style.RESET_ALL}")
+                    self.send_message("error", "No relevant URLs found. Retrying...")
                     attempt += 1
                     continue
 
-                print(Fore.MAGENTA + "⚙️ Scraping selected pages..." + Style.RESET_ALL)
-                # Scraping is done without OutputRedirector to ensure messages are visible
+                self.send_message("info", "⚙️ Scraping selected pages...")
                 scraped_content = self.scrape_content(selected_urls)
 
                 if not scraped_content:
-                    print(f"{Fore.RED}Failed to scrape content. Retrying...{Style.RESET_ALL}")
+                    self.send_message("error", "Failed to scrape content. Retrying...")
                     attempt += 1
                     continue
 
                 self.display_scraped_content(scraped_content)
+                self.send_message("info", "🧠 Thinking...")
 
-                self.print_thinking()
-
-                with OutputRedirector() as output:
-                    evaluation, decision = self.evaluate_scraped_content(user_query, scraped_content)
-                llm_output = output.getvalue()
-                logger.info(f"LLM Output in evaluate_scraped_content:\n{llm_output}")
-
-                print(f"{Fore.MAGENTA}Evaluation: {evaluation}{Style.RESET_ALL}")
-                print(f"{Fore.MAGENTA}Decision: {decision}{Style.RESET_ALL}")
+                evaluation, decision = self.evaluate_scraped_content(user_query, scraped_content)
+                self.send_message("info", f"Evaluation: {evaluation}")
+                self.send_message("info", f"Decision: {decision}")
 
                 if decision == "answer":
-                    return self.generate_final_answer(user_query, scraped_content)
+                    final_answer = self.generate_final_answer(user_query, scraped_content)
+                    self.send_message("result", final_answer)
+                    return final_answer
                 elif decision == "refine":
-                    print(f"{Fore.YELLOW}Refining search...{Style.RESET_ALL}")
+                    self.send_message("info", "Refining search...")
                     attempt += 1
                 else:
-                    print(f"{Fore.RED}Unexpected decision. Proceeding to answer.{Style.RESET_ALL}")
-                    return self.generate_final_answer(user_query, scraped_content)
+                    self.send_message("info", "Unexpected decision. Proceeding to answer.")
+                    final_answer = self.generate_final_answer(user_query, scraped_content)
+                    self.send_message("result", final_answer)
+                    return final_answer
 
             except Exception as e:
-                print(f"{Fore.RED}An error occurred during search attempt. Check the log file for details.{Style.RESET_ALL}")
+                self.send_message("error", f"An error occurred during search attempt: {str(e)}")
                 logger.error(f"An error occurred during search: {str(e)}", exc_info=True)
                 attempt += 1
 
-        return self.synthesize_final_answer(user_query)
+        final_answer = self.synthesize_final_answer(user_query)
+        self.send_message("result", final_answer)
+        return final_answer
 
     def evaluate_scraped_content(self, user_query: str, scraped_content: Dict[str, str]) -> Tuple[str, str]:
         user_query_short = user_query[:200]
@@ -254,7 +277,7 @@ Do not provide any additional information or explanation.
                 logger.info(f"DDG Output in perform_search:\n{ddg_output}")
                 return [{'number': i+1, **result} for i, result in enumerate(results)]
             except Exception as e:
-                print(f"{Fore.RED}Search error: {str(e)}{Style.RESET_ALL}")
+                self.send_message("error", f"Search error: {str(e)}")
                 return []
 
     def display_search_results(self, results: List[Dict]) -> None:
@@ -264,9 +287,9 @@ Do not provide any additional information or explanation.
                 return
 
             # Only show search success status
-            print(f"\nSearch query sent to DuckDuckGo: {self.last_query}")
-            print(f"Time range sent to DuckDuckGo: {self.last_time_range}")
-            print(f"Number of results: {len(results)}")
+            self.send_message("info", f"\nSearch query sent to DuckDuckGo: {self.last_query}")
+            self.send_message("info", f"Time range sent to DuckDuckGo: {self.last_time_range}")
+            self.send_message("info", f"Number of results: {len(results)}")
 
         except Exception as e:
             logger.error(f"Error displaying search results: {str(e)}")
@@ -305,11 +328,11 @@ Reasoning: [Your reasoning for the selections]
                 if allowed_urls:
                     return allowed_urls
                 else:
-                    print(f"{Fore.YELLOW}Warning: All selected URLs are disallowed by robots.txt. Retrying selection.{Style.RESET_ALL}")
+                    self.send_message("info", "Warning: All selected URLs are disallowed by robots.txt. Retrying selection.")
             else:
-                print(f"{Fore.YELLOW}Warning: Invalid page selection. Retrying.{Style.RESET_ALL}")
+                self.send_message("info", "Warning: Invalid page selection. Retrying.")
 
-        print(f"{Fore.YELLOW}Warning: All attempts to select relevant pages failed. Falling back to top allowed results.{Style.RESET_ALL}")
+        self.send_message("info", "Warning: All attempts to select relevant pages failed. Falling back to top allowed results.")
         allowed_urls = [result['href'] for result in search_results if can_fetch(result['href'])][:2]
         return allowed_urls
 
@@ -348,61 +371,61 @@ Reasoning: [Your reasoning for the selections]
                 content = get_web_content([url])
                 if content:
                     scraped_content.update(content)
-                    print(Fore.YELLOW + f"Successfully scraped: {url}" + Style.RESET_ALL)
+                    self.send_message("info", f"Successfully scraped: {url}")
                     logger.info(f"Successfully scraped: {url}")
                 else:
-                    print(Fore.RED + f"Robots.txt disallows scraping of {url}" + Style.RESET_ALL)
+                    self.send_message("error", f"Robots.txt disallows scraping of {url}")
                     logger.warning(f"Robots.txt disallows scraping of {url}")
             else:
                 blocked_urls.append(url)
-                print(Fore.RED + f"Warning: Robots.txt disallows scraping of {url}" + Style.RESET_ALL)
+                self.send_message("error", f"Warning: Robots.txt disallows scraping of {url}")
                 logger.warning(f"Robots.txt disallows scraping of {url}")
 
-        print(Fore.CYAN + f"Scraped content received for {len(scraped_content)} URLs" + Style.RESET_ALL)
+        self.send_message("info", f"Scraped content received for {len(scraped_content)} URLs")
         logger.info(f"Scraped content received for {len(scraped_content)} URLs")
 
         if blocked_urls:
-            print(Fore.RED + f"Warning: {len(blocked_urls)} URL(s) were not scraped due to robots.txt restrictions." + Style.RESET_ALL)
+            self.send_message("error", f"Warning: {len(blocked_urls)} URL(s) were not scraped due to robots.txt restrictions.")
             logger.warning(f"{len(blocked_urls)} URL(s) were not scraped due to robots.txt restrictions: {', '.join(blocked_urls)}")
 
         return scraped_content
 
     def display_scraped_content(self, scraped_content: Dict[str, str]):
-        print(f"\n{Fore.CYAN}Scraped Content:{Style.RESET_ALL}")
+        self.send_message("info", "\nScraped Content:")
         for url, content in scraped_content.items():
-            print(f"{Fore.GREEN}URL: {url}{Style.RESET_ALL}")
-            print(f"Content: {content[:4000]}...\n")
+            self.send_message("info", f"URL: {url}")
+            self.send_message("info", f"Content: {content[:4000]}...\n")
 
     def generate_final_answer(self, user_query: str, scraped_content: Dict[str, str]) -> str:
-        user_query_short = user_query[:200]
-        prompt = f"""
-You are an AI assistant. Provide a comprehensive and detailed answer to the following question using ONLY the information provided in the scraped content. Do not include any references or mention any sources. Answer directly and thoroughly.
+            user_query_short = user_query[:200]
+            prompt = f"""
+            You are an AI assistant. Provide a comprehensive and detailed answer to the following question using ONLY the information provided in the scraped content. Do not include any references or mention any sources. Answer directly and thoroughly.
 
-Question: "{user_query_short}"
+            Question: "{user_query_short}"
 
-Scraped Content:
-{self.format_scraped_content(scraped_content)}
+            Scraped Content:
+            {self.format_scraped_content(scraped_content)}
 
-Important Instructions:
-1. Do not use phrases like "Based on the absence of selected results" or similar.
-2. If the scraped content does not contain enough information to answer the question, say so explicitly and explain what information is missing.
-3. Provide as much relevant detail as possible from the scraped content.
+            Important Instructions:
+            1. Do not use phrases like "Based on the absence of selected results" or similar.
+            2. If the scraped content does not contain enough information to answer the question, say so explicitly and explain what information is missing.
+            3. Provide as much relevant detail as possible from the scraped content.
 
-Answer:
-"""
-        max_retries = 3
-        for attempt in range(max_retries):
-            with OutputRedirector() as output:
-                response_text = self.llm.generate(prompt, max_tokens=1024, stop=None)
-            llm_output = output.getvalue()
-            logger.info(f"LLM Output in generate_final_answer:\n{llm_output}")
-            if response_text:
-                logger.info(f"LLM Response:\n{response_text}")
-                return response_text
+            Answer:
+            """
+            max_retries = 3
+            for attempt in range(max_retries):
+                with OutputRedirector() as output:
+                    response_text = self.llm.generate(prompt, max_tokens=1024, stop=None)
+                llm_output = output.getvalue()
+                logger.info(f"LLM Output in generate_final_answer:\n{llm_output}")
+                if response_text:
+                    logger.info(f"LLM Response:\n{response_text}")
+                    return response_text
 
-        error_message = "I apologize, but I couldn't generate a satisfactory answer based on the available information."
-        logger.warning(f"Failed to generate a response after {max_retries} attempts. Returning error message.")
-        return error_message
+            error_message = "I apologize, but I couldn't generate a satisfactory answer based on the available information."
+            logger.warning(f"Failed to generate a response after {max_retries} attempts. Returning error message.")
+            return error_message
 
     def format_scraped_content(self, scraped_content: Dict[str, str]) -> str:
         formatted_content = []
@@ -445,4 +468,3 @@ Respond in a clear, concise, and informative manner.
             logger.error(f"Error in synthesize_final_answer: {str(e)}", exc_info=True)
         return "I apologize, but after multiple attempts, I wasn't able to find a satisfactory answer to your question. Please try rephrasing your question or breaking it down into smaller, more specific queries."
 
-# Rest of the file remains the same
