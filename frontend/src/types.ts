@@ -92,14 +92,18 @@ export interface ResearchDashboardProps {
   status: string;
   startTime?: string;
   isAssessing?: boolean;
-  assessmentResult?: {
-    assessment: "sufficient" | "insufficient";
-    reason: string;
-  };
+  assessmentResult?: AssessmentResult;
   // Result Data
   hasResult: boolean;
   result?: ResearchResult;
+  // Control Functions
+  onPause: () => void;
+  onResume: () => void;
+  onAssess: () => void;
+  // Messages for displaying in tabs
+  messages: Message[];
 }
+
 // Settings Types
 export interface SearchSettings {
   maxAttempts: number;
@@ -122,15 +126,16 @@ export interface Message {
 
 // Session Types
 export interface ResearchSession {
-  sessionId: string;
-  status: ResearchStatus;
+  session_id: string;
   query: string;
-  messages: Message[];
-  settings: SearchSettings;
-  startTime: string;
+  mode: string;
+  status: ResearchStatus;
+  start_time: string;
+  end_time?: string;
   result?: string;
-  endTime?: string;
+  settings?: SearchSettings;
   research_details?: ResearchDetails;
+  messages?: Message[]; // Add messages field
 }
 
 // Add ResearchHistory component props

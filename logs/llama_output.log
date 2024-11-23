@@ -5468,3 +5468,489 @@ Starting message processing for session 20241123_184128
 2024-11-23 18:41:48,452 - INFO - Successfully scraped: https://www.verywellmind.com/signs-you-and-your-partner-compatible-7562809
 2024-11-23 18:41:50,117 - INFO - Successfully scraped: https://www.psychologytoday.com/us/blog/loving-bravely/202107/how-couples-know-theyre-compatible
 2024-11-23 18:41:50,117 - INFO - Scraped content received for 2 URLs
+2024-11-23 18:51:52,906 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_185151
+Starting message processing for session 20241123_185151
+
+2024-11-23 18:51:53,335 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:51:54,583 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:51:59,164 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:52:03,002 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:52:06,797 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:52:15,568 - INFO - Successfully scraped: https://gamerant.com/best-cpus-rtx-4060-ti-gaming/
+2024-11-23 18:52:15,870 - INFO - Successfully scraped: https://www.windowscentral.com/gaming/pc-gaming/best-cpu-for-nvidia-rtx-4060
+2024-11-23 18:52:15,870 - INFO - Scraped content received for 2 URLs
+2024-11-23 18:53:23,903 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_185323
+Starting message processing for session 20241123_185323
+
+2024-11-23 18:53:25,074 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:53:25,074 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:53:29,528 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:53:30,942 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:53:34,853 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:53:42,081 - INFO - Successfully scraped: https://gamerant.com/best-cpus-rtx-4060-ti-gaming/
+2024-11-23 18:53:44,556 - INFO - Successfully scraped: https://forums.tomshardware.com/threads/best-cpu-for-4060ti.3852041/
+2024-11-23 18:53:44,556 - INFO - Scraped content received for 2 URLs
+2024-11-23 18:53:58,384 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 18:53:58,896 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:54:00,087 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:54:00,087 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:54:05,481 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:54:09,893 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:54:14,338 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:54:20,245 - INFO - Successfully scraped: https://gamerant.com/best-cpus-rtx-4060-ti-gaming/
+2024-11-23 18:54:20,536 - INFO - Successfully scraped: https://www.windowscentral.com/gaming/pc-gaming/best-cpu-for-nvidia-rtx-4060
+2024-11-23 18:54:20,536 - INFO - Scraped content received for 2 URLs
+2024-11-23 18:54:31,426 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 18:54:31,942 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:54:33,145 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:54:33,145 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:54:36,601 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:54:41,125 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:54:43,542 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:54:48,826 - INFO - Successfully scraped: https://www.windowscentral.com/gaming/pc-gaming/best-cpu-for-nvidia-rtx-4060
+2024-11-23 18:54:51,350 - INFO - Successfully scraped: https://h30434.www3.hp.com/t5/Desktop-Hardware-and-Upgrade-Questions/Required-materials-to-install-an-ASUS-GEFORCE-RTX-1060ti-for/m-p/9220994
+2024-11-23 18:54:51,350 - INFO - Scraped content received for 2 URLs
+2024-11-23 18:55:00,336 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 18:55:00,843 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:55:02,167 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:55:02,167 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:55:06,976 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:55:11,343 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:55:15,435 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:56:01,416 - INFO - Successfully scraped: https://www.windowscentral.com/gaming/pc-gaming/best-cpu-for-nvidia-rtx-4060
+2024-11-23 18:56:03,808 - INFO - Successfully scraped: https://h30434.www3.hp.com/t5/Desktop-Hardware-and-Upgrade-Questions/Required-materials-to-install-an-ASUS-GEFORCE-RTX-1060ti-for/m-p/9220994
+2024-11-23 18:56:03,808 - INFO - Scraped content received for 2 URLs
+2024-11-23 18:56:12,146 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 18:56:12,701 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:56:12,923 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:56:14,058 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:56:14,058 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:56:18,492 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:56:19,853 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:56:23,248 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:56:26,958 - INFO - Successfully scraped: https://www.intel.com/content/www/us/en/support/articles/000025102/processors/intel-core-processors.html
+2024-11-23 18:56:27,293 - INFO - Successfully scraped: https://www.intel.com/content/www/us/en/support/topics/compatibility.html
+2024-11-23 18:56:27,294 - INFO - Scraped content received for 2 URLs
+2024-11-23 18:56:33,157 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 18:56:34,542 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 19:46:11,800 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_194533
+Starting message processing for session 20241123_194533
+
+2024-11-23 19:46:12,576 - INFO - LLM Output in formulate_query:
+
+2024-11-23 19:46:13,358 - INFO - LLM Output in formulate_query:
+
+2024-11-23 19:46:14,434 - INFO - DDG Output in perform_search:
+
+2024-11-23 19:46:14,434 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 19:46:18,580 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:46:21,000 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:46:22,308 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:46:31,162 - INFO - Successfully scraped: https://textranch.com/c/suggestions-on-or-suggestions-about/
+2024-11-23 19:47:49,010 - WARNING - Robots.txt disallows scraping of https://dansrealenglish.com/asking-and-giving-advice-in-english/
+2024-11-23 19:47:49,010 - INFO - Scraped content received for 1 URLs
+2024-11-23 19:47:55,252 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 19:47:55,666 - INFO - LLM Output in formulate_query:
+
+2024-11-23 19:47:56,716 - INFO - DDG Output in perform_search:
+
+2024-11-23 19:47:56,716 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 19:48:01,090 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:48:05,084 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:48:08,542 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:48:16,792 - INFO - Successfully scraped: https://blog.spheron.network/ultimate-guide-to-the-best-nvidia-gpus-for-running-large-language-models
+2024-11-23 19:48:19,162 - INFO - Successfully scraped: https://blog.neevcloud.com/how-to-use-lm-studio-to-locally-accelerate-larger-llm-on-rtx
+2024-11-23 19:48:19,162 - INFO - Scraped content received for 2 URLs
+2024-11-23 19:48:28,230 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 19:48:28,749 - INFO - LLM Output in formulate_query:
+
+2024-11-23 19:48:29,776 - INFO - DDG Output in perform_search:
+
+2024-11-23 19:48:29,776 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 19:48:34,887 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:48:36,536 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:48:40,359 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:48:44,160 - INFO - Successfully scraped: https://blog.spheron.network/ultimate-guide-to-the-best-nvidia-gpus-for-running-large-language-models
+2024-11-23 19:48:44,620 - INFO - Successfully scraped: https://blog.neevcloud.com/how-to-use-lm-studio-to-locally-accelerate-larger-llm-on-rtx
+2024-11-23 19:48:44,620 - INFO - Scraped content received for 2 URLs
+2024-11-23 19:48:53,606 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 19:48:54,127 - INFO - LLM Output in formulate_query:
+
+2024-11-23 19:48:55,183 - INFO - DDG Output in perform_search:
+
+2024-11-23 19:48:55,183 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 19:48:59,576 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:49:03,308 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:49:06,619 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:49:12,734 - INFO - Successfully scraped: https://techtactician.com/best-gpu-for-local-llm-ai-this-year/
+2024-11-23 19:49:39,524 - INFO - Successfully scraped: https://techtactician.com/best-gpu-for-local-ai-software-this-year/
+2024-11-23 19:49:39,524 - INFO - Scraped content received for 2 URLs
+2024-11-23 19:49:49,093 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 19:49:49,394 - INFO - LLM Output in formulate_query:
+
+2024-11-23 19:49:49,736 - INFO - LLM Output in formulate_query:
+
+2024-11-23 19:49:51,042 - INFO - DDG Output in perform_search:
+
+2024-11-23 19:49:51,042 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 19:49:55,381 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:49:59,054 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:50:00,542 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:50:03,792 - INFO - Successfully scraped: https://blog.spheron.network/ultimate-guide-to-the-best-nvidia-gpus-for-running-large-language-models
+2024-11-23 19:50:04,045 - INFO - Successfully scraped: https://developer.nvidia.com/blog/llama-3-2-full-stack-optimizations-unlock-high-performance-on-nvidia-gpus/
+2024-11-23 19:50:04,045 - INFO - Scraped content received for 2 URLs
+2024-11-23 19:50:14,534 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 19:50:15,109 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 19:52:47,026 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_195246
+Starting message processing for session 20241123_195246
+
+2024-11-23 19:52:48,060 - INFO - DDG Output in perform_search:
+
+2024-11-23 19:52:49,886 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:52:53,355 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:52:56,863 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 19:53:23,280 - INFO - Successfully scraped: https://ask.csdn.net/questions/8164230
+2024-11-23 19:53:29,002 - INFO - Successfully scraped: http://www.coreui.cn/news/220197.html
+2024-11-23 19:53:29,002 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:09:59,307 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_220958
+Starting message processing for session 20241123_220958
+
+2024-11-23 22:10:00,392 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:10:04,818 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:10:08,046 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:10:12,436 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:10:15,778 - INFO - Successfully scraped: https://github.com/ggerganov/llama.cpp/discussions/3167
+2024-11-23 22:10:16,904 - INFO - Successfully scraped: https://github.com/CoderLSF/fast-llama
+2024-11-23 22:10:16,904 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:13:16,301 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_221308
+Starting message processing for session 20241123_221308
+
+2024-11-23 22:13:16,578 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:13:16,825 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:13:17,953 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:13:17,953 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:13:20,583 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:13:22,076 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:13:25,706 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:14:27,423 - INFO - Successfully scraped: https://www.tomshardware.com/reviews/best-cpus,3986.html
+2024-11-23 22:14:28,490 - INFO - Successfully scraped: https://www.techradar.com/news/best-processors
+2024-11-23 22:14:28,490 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:14:34,950 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:14:35,932 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:14:37,154 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:14:37,154 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:14:41,630 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:14:44,397 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:14:48,142 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:14:58,025 - INFO - Successfully scraped: https://community.amd.com/t5/ai/accelerating-llama-cpp-performance-in-consumer-llm-applications/ba-p/720311
+2024-11-23 22:14:59,479 - INFO - Successfully scraped: https://community.arm.com/arm-community-blogs/b/infrastructure-solutions-blog/posts/ai-inference-on-google-axion-cpu
+2024-11-23 22:14:59,479 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:15:05,576 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:15:05,844 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:15:06,460 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:15:06,711 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:15:06,871 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:15:08,706 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:15:08,706 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:15:11,049 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:15:14,753 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:15:18,442 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:16:09,570 - INFO - Successfully scraped: https://www.tomshardware.com/reviews/best-cpus,3986.html
+2024-11-23 22:16:09,974 - INFO - Successfully scraped: https://www.techradar.com/news/best-processors
+2024-11-23 22:16:09,974 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:16:17,251 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:16:17,619 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:16:17,946 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:16:19,757 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:16:19,757 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:16:23,640 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:16:27,962 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:16:32,289 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:16:40,296 - INFO - Successfully scraped: https://www.intel.com/content/www/us/en/developer/articles/technical/meta-llama-3-optimized-cpu-inference.html
+2024-11-23 22:16:42,056 - INFO - Successfully scraped: https://developer.nvidia.com/blog/optimizing-llama-cpp-ai-inference-with-cuda-graphs/
+2024-11-23 22:16:42,056 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:16:51,277 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:16:52,335 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 22:17:57,245 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_221756
+Starting message processing for session 20241123_221756
+
+2024-11-23 22:17:57,528 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:17:58,742 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:18:03,214 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:18:07,004 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:18:11,251 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:18:16,009 - INFO - Successfully scraped: https://www.intel.com/content/www/us/en/developer/articles/technical/meta-llama-3-optimized-cpu-inference.html
+2024-11-23 22:18:19,112 - INFO - Successfully scraped: https://community.amd.com/t5/ai/accelerating-llama-cpp-performance-in-consumer-llm-applications/ba-p/720311
+2024-11-23 22:18:19,112 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:45:27,829 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:45:28,272 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:45:28,635 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:45:29,695 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:45:29,695 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:45:33,851 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:45:37,458 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:45:41,031 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:45:47,458 - INFO - Successfully scraped: https://www.verywellmind.com/signs-you-and-your-partner-compatible-7562809
+2024-11-23 22:45:49,403 - INFO - Successfully scraped: https://www.psychologytoday.com/us/blog/loving-bravely/202107/how-couples-know-theyre-compatible
+2024-11-23 22:45:49,403 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:45:57,294 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:45:57,626 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:45:58,165 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:45:59,468 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:45:59,468 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:46:03,617 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:46:08,059 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:46:12,473 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:46:21,156 - INFO - Successfully scraped: https://www.techreviewer.com/best-tech/amd-5900x-motherboard/
+2024-11-23 22:46:24,161 - INFO - Successfully scraped: https://www.windowscentral.com/best-motherboards-amd-ryzen-9-5900x
+2024-11-23 22:46:24,161 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:46:32,915 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:46:33,708 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:46:33,900 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:46:34,418 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:46:35,498 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:46:35,498 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:46:39,842 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:46:44,093 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:46:48,271 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:46:55,801 - INFO - Successfully scraped: https://www.verywellmind.com/signs-you-and-your-partner-compatible-7562809
+2024-11-23 22:46:57,610 - INFO - Successfully scraped: https://www.psychologytoday.com/us/blog/fixing-families/202302/7-questions-to-help-you-know-if-youre-compatible
+2024-11-23 22:46:57,610 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:47:03,751 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:47:04,705 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:47:05,499 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:47:05,718 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:47:07,352 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:47:07,352 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:47:11,857 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:47:16,042 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:47:20,303 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:47:28,083 - INFO - Successfully scraped: https://forums.tomshardware.com/threads/will-my-motherboard-support-an-rtx-4060-ti.3809340/
+2024-11-23 22:47:28,083 - INFO - Scraped content received for 1 URLs
+2024-11-23 22:47:35,646 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:47:36,282 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:47:37,767 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:47:37,767 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:47:43,145 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:47:47,517 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:47:51,875 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:47:57,742 - INFO - Successfully scraped: https://www.windowscentral.com/gaming/pc-gaming/best-cpu-for-nvidia-rtx-4060
+2024-11-23 22:47:59,274 - INFO - Successfully scraped: https://www.youtube.com/watch?v=1sTxuYlKBqk
+2024-11-23 22:47:59,274 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:48:06,299 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:48:06,692 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 22:50:59,073 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_225058
+Starting message processing for session 20241123_225058
+
+2024-11-23 22:50:59,279 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:50:59,516 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:51:00,753 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:51:00,753 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:51:04,920 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:51:08,414 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:51:11,520 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:51:23,075 - INFO - Successfully scraped: https://www.calculatorsoup.com/calculators/health/pace-calculator.php
+2024-11-23 22:51:25,958 - INFO - Successfully scraped: https://www.calculator.net/pace-calculator.html
+2024-11-23 22:51:25,974 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:51:31,950 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:51:32,298 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:51:32,535 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:51:33,332 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:51:34,568 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:51:34,568 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:51:36,497 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:51:37,878 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:51:41,477 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:51:49,243 - INFO - Successfully scraped: https://www.calculatorsoup.com/calculators/health/pace-calculator.php
+2024-11-23 22:51:52,427 - INFO - Successfully scraped: https://www.calculator.net/pace-calculator.html
+2024-11-23 22:51:52,427 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:52:05,349 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:52:05,761 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:52:06,797 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:52:06,797 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:52:11,167 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:52:14,742 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:52:18,203 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:52:23,192 - INFO - Successfully scraped: https://getstream.io/blog/best-local-llm-tools/
+2024-11-23 22:52:23,619 - INFO - Successfully scraped: https://lirantal.com/blog/how-to-run-local-llm-for-inference-with-offline-first-approach
+2024-11-23 22:52:23,619 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:52:29,655 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:52:30,026 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:52:30,408 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:52:31,427 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:52:31,427 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:52:35,874 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:52:39,492 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:52:43,228 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:52:45,587 - INFO - Successfully scraped: https://github.com/LlamaEdge/LlamaEdge
+2024-11-23 22:52:46,701 - INFO - Successfully scraped: https://github.com/OrionStarAI/vllm_server
+2024-11-23 22:52:46,701 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:52:55,554 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:52:56,053 - INFO - LLM Output in formulate_query:
+
+2024-11-23 22:52:57,342 - INFO - DDG Output in perform_search:
+
+2024-11-23 22:52:57,342 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 22:53:02,683 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:53:04,920 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:53:09,180 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 22:53:11,081 - INFO - Successfully scraped: https://python.langchain.com/docs/how_to/local_llms/
+2024-11-23 22:53:11,429 - INFO - Successfully scraped: https://getstream.io/blog/best-local-llm-tools/
+2024-11-23 22:53:11,429 - INFO - Scraped content received for 2 URLs
+2024-11-23 22:53:17,765 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 22:53:18,527 - INFO - LLM Output in synthesize_final_answer:
+
