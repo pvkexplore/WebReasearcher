@@ -1,14 +1,20 @@
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from datetime import datetime
 import os
 
-from .models import ResearchProgress, ResearchRequest, ResearchResponse, ResearchDocument
+from .models import (
+    ResearchProgress, 
+    ResearchRequest, 
+    ResearchResponse, 
+    ResearchDocument,
+    ResearchSession
+)
 from .session_manager import SessionManager
 from .websocket_manager import WebSocketManager
 
-# Note: The prefix is now handled in main.py
-router = APIRouter(tags=["research-management"])
+# Create router with proper tag
+router = APIRouter(tags=["research"])
 
 # Dependency to get managers
 async def get_managers():
@@ -27,6 +33,103 @@ async def get_active_session(
         raise HTTPException(status_code=404, detail="Research session not found")
     return session
 
+# Add start endpoint
+@router.post("/start")
+async def start_research(
+    request: ResearchRequest,
+    managers: tuple[SessionManager, WebSocketManager] = Depends(get_managers)
+):
+    """Start a new research session"""
+    try:
+        session_manager, _ = managers
+        
+        # Create session with query
+        session_id = session_manager.create_session(query=request.query, mode=request.mode)
+        
+        # Initialize session
+        session_manager.initialize_session(session_id, request)
+        
+        # Start the research process
+        future = session_manager.start_research(session_id, request.query)
+        
+        return {
+            "status": "success",
+            "session_id": session_id,
+            "message": "Research session started"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# New endpoints for session history
+@router.get("/sessions", response_model=List[ResearchSession])
+async def get_research_sessions(
+    managers: tuple[SessionManager, WebSocketManager] = Depends(get_managers)
+):
+    """Get all research sessions"""
+    try:
+        session_manager, _ = managers
+        sessions = session_manager.get_all_sessions()
+        if not sessions:
+            return []
+        return [ResearchSession(**session) for session in sessions]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error retrieving sessions: {str(e)}")
+
+@router.delete("/sessions/{session_id}")
+async def delete_research_session(
+    session_id: str,
+    managers: tuple[SessionManager, WebSocketManager] = Depends(get_managers)
+):
+    """Delete a research session"""
+    try:
+        session_manager, _ = managers
+        success = session_manager.delete_session(session_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Session not found")
+        return {"status": "success", "message": "Session deleted"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/sessions/{session_id}/restore")
+async def restore_research_session(
+    session_id: str,
+    managers: tuple[SessionManager, WebSocketManager] = Depends(get_managers)
+):
+    """Restore a previous research session"""
+    try:
+        session_manager, _ = managers
+        session = session_manager.get_session(session_id)
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
+
+        # Create a new session with the same query and mode
+        new_session_id = session_manager.create_session(
+            query=session["query"],
+            mode=session["mode"]
+        )
+        
+        # Initialize with original request
+        request = ResearchRequest(
+            query=session["query"],
+            mode=session["mode"],
+            settings=session.get("settings")
+        )
+        
+        session_manager.initialize_session(new_session_id, request)
+        
+        return {
+            "status": "success",
+            "message": "Session restored",
+            "new_session_id": new_session_id
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Existing endpoints
 @router.get("/{session_id}/progress", response_model=ResearchProgress)
 async def get_research_progress(
     session_id: str,

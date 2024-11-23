@@ -1,3 +1,105 @@
+export interface LLMInteraction {
+  stage: string;
+  prompt: string;
+  response: string;
+  timestamp: string;
+}
+
+export interface AnalysisStep {
+  stage: string;
+  description: string;
+  outcome?: string;
+  timestamp: string;
+}
+
+export interface SourceMetrics {
+  reliability: number;
+  content_length: number;
+  scrape_time: string;
+}
+
+export interface ScrapedContent {
+  content: string;
+  timestamp: string;
+}
+
+export interface KnowledgeGraphEntity {
+  name: string;
+  type: string;
+  description: string;
+}
+
+export interface KnowledgeGraphRelationship {
+  source: string;
+  target: string;
+  type: string;
+}
+
+export interface KnowledgeGraph {
+  entities: KnowledgeGraphEntity[];
+  relationships: KnowledgeGraphRelationship[];
+}
+
+export interface ResearchDetails {
+  urls_accessed: string[];
+  successful_urls: string[];
+  failed_urls: string[];
+  content_summaries: Array<{
+    url: string;
+    summary: string;
+  }>;
+  analysis_steps?: AnalysisStep[];
+  source_metrics?: { [url: string]: SourceMetrics };
+  llm_interactions?: LLMInteraction[];
+  scraped_content?: { [url: string]: ScrapedContent };
+  knowledge_graph?: KnowledgeGraph;
+}
+
+export interface ResearchResult {
+  summary: string;
+  keyFindings: string[];
+  sources: Array<{
+    url: string;
+    title: string;
+    reliability: number;
+    content: string;
+  }>;
+  analysisSteps: Array<{
+    stage: string;
+    description: string;
+    outcome: string;
+  }>;
+}
+
+export interface ResearchDashboardProps {
+  // Progress Data
+  currentFocus?: {
+    area: string;
+    priority: number;
+  };
+  sourcesAnalyzed: number;
+  documentContent?: string;
+  sources: string[];
+  stage?: string;
+  researchDetails?: ResearchDetails;
+  // Analysis Data
+  confidenceScore: number;
+  focusAreas: Array<{
+    area: string;
+    priority: number;
+  }>;
+  // Status
+  status: string;
+  startTime?: string;
+  isAssessing?: boolean;
+  assessmentResult?: {
+    assessment: "sufficient" | "insufficient";
+    reason: string;
+  };
+  // Result Data
+  hasResult: boolean;
+  result?: ResearchResult;
+}
 // Settings Types
 export interface SearchSettings {
   maxAttempts: number;
@@ -25,6 +127,26 @@ export interface ResearchSession {
   query: string;
   messages: Message[];
   settings: SearchSettings;
+  startTime: string;
+  result?: string;
+  endTime?: string;
+  research_details?: ResearchDetails;
+}
+
+// Add ResearchHistory component props
+export interface ResearchHistoryProps {
+  sessions: ResearchSession[];
+  onDeleteSession: (sessionId: string) => void;
+  onRestoreSession: (sessionId: string) => void;
+}
+
+// Add ConfirmDialog component props
+export interface ConfirmDialogProps {
+  isOpen: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+  title: string;
+  message: string;
 }
 
 // Research Types

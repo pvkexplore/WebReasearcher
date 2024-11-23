@@ -87,6 +87,7 @@ class EnhancedSelfImprovingSearch:
         self.max_attempts = max_attempts
         self.llm_config = get_llm_config()
         self.message_handler = message_handler or DefaultMessageHandler()
+        self.stop_requested = False
 
     def send_message(self, type: str, message: str, data: Optional[Dict] = None) -> None:
         """Send a message through the message handler"""
@@ -95,11 +96,16 @@ class EnhancedSelfImprovingSearch:
 
     def search_and_improve(self, user_query: str) -> str:
         attempt = 0
-        while attempt < self.max_attempts:
+        while attempt < self.max_attempts and not self.stop_requested:
             self.send_message("info", f"\nSearch attempt {attempt + 1}:")
             self.send_message("info", "📝 Searching...")
 
             try:
+                # Check for stop request before each major operation
+                if self.stop_requested:
+                    self.send_message("info", "Search process stopped by user.")
+                    break
+
                 formulated_query, time_range = self.formulate_query(user_query, attempt)
                 self.send_message("info", f"Original query: {user_query}")
                 self.send_message("info", f"Formulated query: {formulated_query}")
@@ -110,11 +116,17 @@ class EnhancedSelfImprovingSearch:
                     attempt += 1
                     continue
 
+                if self.stop_requested:
+                    break
+
                 search_results = self.perform_search(formulated_query, time_range)
                 if not search_results:
                     self.send_message("error", "No results found. Retrying with a different query...")
                     attempt += 1
                     continue
+
+                if self.stop_requested:
+                    break
 
                 self.display_search_results(search_results)
                 selected_urls = self.select_relevant_pages(search_results, user_query)
@@ -124,6 +136,9 @@ class EnhancedSelfImprovingSearch:
                     attempt += 1
                     continue
 
+                if self.stop_requested:
+                    break
+
                 self.send_message("info", "⚙️ Scraping selected pages...")
                 scraped_content = self.scrape_content(selected_urls)
 
@@ -132,12 +147,18 @@ class EnhancedSelfImprovingSearch:
                     attempt += 1
                     continue
 
+                if self.stop_requested:
+                    break
+
                 self.display_scraped_content(scraped_content)
                 self.send_message("info", "🧠 Thinking...")
 
                 evaluation, decision = self.evaluate_scraped_content(user_query, scraped_content)
                 self.send_message("info", f"Evaluation: {evaluation}")
                 self.send_message("info", f"Decision: {decision}")
+
+                if self.stop_requested:
+                    break
 
                 if decision == "answer":
                     final_answer = self.generate_final_answer(user_query, scraped_content)
@@ -157,6 +178,14 @@ class EnhancedSelfImprovingSearch:
                 logger.error(f"An error occurred during search: {str(e)}", exc_info=True)
                 attempt += 1
 
+            # Check for stop request at the end of each attempt
+            if self.stop_requested:
+                break
+
+        # If stopped or max attempts reached
+        if self.stop_requested:
+            return "Research process was stopped by user request."
+        
         final_answer = self.synthesize_final_answer(user_query)
         self.send_message("result", final_answer)
         return final_answer

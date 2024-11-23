@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import config from "./config";
 import "./App.css";
 import { ResearchHeader } from "./components/ResearchHeader";
 import { SearchBar } from "./components/SearchBar";
@@ -8,6 +9,9 @@ import { ErrorMessage } from "./components/ErrorMessage";
 import { StrategicAnalysis } from "./components/StrategicAnalysis";
 import { ResearchControls } from "./components/ResearchControls";
 import { ResearchProgress } from "./components/ResearchProgress";
+import { ResearchDashboard } from "./components/ResearchDashboard";
+import { ResearchHistory } from "./components/ResearchHistory";
+
 import {
   SearchSettings,
   Message,
@@ -59,6 +63,90 @@ function App() {
   const reconnectAttempts = useRef(0);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
 
+  const [researchSessions, setResearchSessions] = useState<ResearchSession[]>(
+    []
+  );
+
+  // Add function to fetch research history
+  const fetchResearchHistory = async () => {
+    try {
+      const response = await fetch("/api/research/sessions");
+      if (!response.ok) {
+        throw new Error("Failed to fetch research history");
+      }
+      const sessions = await response.json();
+      setResearchSessions(sessions);
+    } catch (err) {
+      console.error("Error fetching research history:", err);
+      setError("Failed to fetch research history");
+    }
+  };
+
+  // Add function to delete session
+  const handleDeleteSession = async (sessionId: string) => {
+    try {
+      const response = await fetch(`/api/research/sessions/${sessionId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete session");
+      }
+      // Refresh sessions list
+      fetchResearchHistory();
+    } catch (err) {
+      console.error("Error deleting session:", err);
+      setError("Failed to delete session");
+    }
+  };
+
+  // Add function to restore session
+  const handleRestoreSession = async (sessionId: string) => {
+    try {
+      const response = await fetch(
+        `/api/research/sessions/${sessionId}/restore`,
+        {
+          method: "POST",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to restore session");
+      }
+      const result = await response.json();
+
+      // Start new session with restored data
+      const restoredSession = researchSessions.find(
+        (s) => s.sessionId === sessionId
+      );
+      if (restoredSession) {
+        setQuery(restoredSession.query);
+        setupWebSocket(result.new_session_id);
+        setSession({
+          sessionId: result.new_session_id,
+          status: "starting",
+          query: restoredSession.query,
+          messages: [],
+          settings,
+          startTime: new Date().toISOString(),
+        });
+      }
+    } catch (err) {
+      console.error("Error restoring session:", err);
+      setError("Failed to restore session");
+    }
+  };
+
+  // Fetch research history on mount
+  useEffect(() => {
+    fetchResearchHistory();
+  }, []);
+
+  // Update research history when a session completes
+  useEffect(() => {
+    if (session?.status === "completed" || session?.status === "stopped") {
+      fetchResearchHistory();
+    }
+  }, [session?.status]);
+
   const isProcessing = Boolean(
     session &&
       !hasResult &&
@@ -87,7 +175,7 @@ function App() {
       return;
     }
 
-    const ws = new WebSocket(`ws://localhost:8000/ws/${sessionId}`);
+    const ws = new WebSocket(`${config.server.wsUrl}/ws/${sessionId}`);
     wsRef.current = ws;
     ws.onopen = () => {
       console.log("WebSocket connected");
@@ -357,7 +445,6 @@ function App() {
       setAssessmentResult(undefined);
       setCurrentStage("initializing");
       setResearchDetails({
-        // Reset research details
         urls_accessed: [],
         successful_urls: [],
         failed_urls: [],
@@ -382,13 +469,14 @@ function App() {
       const sessionData = await sessionResponse.json();
       const sessionId = sessionData.session_id;
 
-      // Set initial session state
+      // Set initial session state with startTime
       setSession({
         sessionId,
         status: "pending",
         query,
         messages: [],
         settings,
+        startTime: new Date().toISOString(), // Add startTime
       });
 
       // Setup WebSocket connection
@@ -476,45 +564,58 @@ function App() {
 
         <ErrorMessage message={error} />
 
-        {/* Show progress for both research and basic search modes */}
-        {showResearchComponents && session && (
-          <>
-            {settings.searchMode === "research" && (
-              <>
-                <StrategicAnalysis
-                  focusAreas={focusAreas}
-                  confidenceScore={confidenceScore}
-                />
-
-                <ResearchControls
-                  status={session.status}
-                  onPause={handlePause}
-                  onResume={handleResume}
-                  onAssess={handleAssess}
-                  isAssessing={isAssessing}
-                  assessmentResult={assessmentResult}
-                />
-              </>
-            )}
-
-            <ResearchProgress
-              currentFocus={currentFocus}
-              sourcesAnalyzed={sourcesAnalyzed}
-              documentContent={documentContent}
-              sources={sources}
-              stage={currentStage}
-              researchDetails={researchDetails}
-            />
-          </>
-        )}
-
-        <MessagesList
-          messages={messages}
-          hasResult={hasResult}
-          expandedMessages={expandedMessages}
-          onToggleExpand={() => setExpandedMessages(!expandedMessages)}
-          isProcessing={isProcessing}
+        {/* Add ResearchHistory component */}
+        <ResearchHistory
+          sessions={researchSessions}
+          onDeleteSession={handleDeleteSession}
+          onRestoreSession={handleRestoreSession}
         />
+
+        {session && (
+          <ResearchDashboard
+            currentFocus={currentFocus}
+            sourcesAnalyzed={sourcesAnalyzed}
+            documentContent={documentContent}
+            sources={sources}
+            stage={currentStage}
+            researchDetails={researchDetails}
+            confidenceScore={confidenceScore}
+            focusAreas={focusAreas}
+            status={session.status}
+            startTime={session.startTime}
+            isAssessing={isAssessing}
+            assessmentResult={assessmentResult}
+            hasResult={hasResult}
+            result={
+              hasResult
+                ? {
+                    summary:
+                      messages.find((m) => m.type === "result")?.message || "",
+                    keyFindings: messages
+                      .filter((m) => m.type === "finding")
+                      .map((m) => m.message),
+                    sources:
+                      researchDetails?.successful_urls.map((url) => ({
+                        url,
+                        title: new URL(url).hostname,
+                        reliability: 100,
+                        content:
+                          researchDetails?.content_summaries.find(
+                            (s) => s.url === url
+                          )?.summary || "",
+                      })) || [],
+                    analysisSteps: messages
+                      .filter((m) => m.type === "progress")
+                      .map((m) => ({
+                        stage: m.data?.stage || "Unknown",
+                        description: m.message,
+                        outcome: m.data?.outcome || "",
+                      })),
+                  }
+                : undefined
+            }
+          />
+        )}
 
         {showSettings && (
           <SettingsPanel

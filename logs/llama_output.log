@@ -4303,3 +4303,1168 @@ Starting message processing for session 20241123_012906
 
 2024-11-23 01:30:42,185 - INFO - LLM Response:
 The ancient origins expert stated that there are no new gods for the past 1000 years because of a significant reversal in symbolism. This reversal suggests that an earlier tradition, which was less well-known and comes out of the Sakti Cult, is based on an original feminine deity named Amma. However, this name and meaning have been reversed to accommodate an ambiguous definition by the Dogon as both male and female. Additionally, another important deity would be King of the World, often identified by his followers with a beneficent culture bearer who taught the path to God but eventually experienced a fall and met an untimely demise through torture and murder.
+2024-11-23 14:38:58,875 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_143858
+
+2024-11-23 14:39:00,160 - INFO - DDG Output in perform_search:
+
+2024-11-23 14:39:00,160 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 14:39:04,360 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:39:08,314 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:39:12,562 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:39:18,766 - INFO - Successfully scraped: https://eclkc.ohs.acf.hhs.gov/teaching-practices/article/infanttoddler-teaching-practices
+2024-11-23 14:39:20,778 - INFO - Successfully scraped: https://www.edutopia.org/article/teaching-early-learners-sel-skills
+2024-11-23 14:39:20,778 - INFO - Scraped content received for 2 URLs
+2024-11-23 14:39:32,926 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 14:39:33,592 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:39:33,934 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:39:34,945 - INFO - DDG Output in perform_search:
+
+2024-11-23 14:39:34,961 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 14:39:40,042 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:39:42,545 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:39:46,774 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:39:56,749 - INFO - Successfully scraped: https://sajeevms.com/2024/10/30/what-makes-a-good-kindergarten-teacher-essential-skills-and-qualities/
+2024-11-23 14:40:01,634 - INFO - Successfully scraped: https://educationwalkthrough.com/qualities-of-a-good-teacher/
+2024-11-23 14:40:01,634 - INFO - Scraped content received for 2 URLs
+2024-11-23 14:40:09,619 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 14:40:10,195 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:40:10,759 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:40:11,179 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:40:12,442 - INFO - DDG Output in perform_search:
+
+2024-11-23 14:40:12,442 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 14:40:17,429 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:40:21,654 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:40:24,535 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:40:34,836 - INFO - Successfully scraped: https://teachingwheart.com/10-proven-strategies-for-classroom-management-in-kindergarten/
+2024-11-23 14:40:34,836 - INFO - Scraped content received for 1 URLs
+2024-11-23 14:40:43,675 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 14:40:44,292 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:40:44,677 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:40:45,392 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:40:46,610 - INFO - DDG Output in perform_search:
+
+2024-11-23 14:40:46,610 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 14:40:51,358 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:40:55,427 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:40:58,692 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:41:08,471 - INFO - Successfully scraped: https://www.teachelementary.org/effective-teaching/6-traits-effective-kindergarten-teachers/
+2024-11-23 14:41:11,748 - INFO - Successfully scraped: https://teachingwheart.com/10-proven-strategies-for-classroom-management-in-kindergarten/
+2024-11-23 14:41:11,748 - INFO - Scraped content received for 2 URLs
+2024-11-23 14:41:17,832 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 14:41:18,767 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:41:19,022 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:41:20,147 - INFO - DDG Output in perform_search:
+
+2024-11-23 14:41:20,147 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 14:41:23,876 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:41:26,393 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:41:30,024 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:41:38,297 - INFO - Successfully scraped: https://sajeevms.com/2024/10/30/what-makes-a-good-kindergarten-teacher-essential-skills-and-qualities/
+2024-11-23 14:41:42,402 - INFO - Successfully scraped: https://www.ablison.com/pros-and-cons-of-being-a-kindergarten-teacher/
+2024-11-23 14:41:42,402 - INFO - Scraped content received for 2 URLs
+2024-11-23 14:41:47,654 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 14:41:48,329 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 14:51:52,610 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:51:53,677 - INFO - DDG Output in perform_search:
+
+2024-11-23 14:51:57,424 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:51:59,617 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:52:01,998 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:52:09,168 - INFO - Successfully scraped: https://sajeevms.com/2024/10/30/what-makes-a-good-kindergarten-teacher-essential-skills-and-qualities/
+2024-11-23 14:52:11,692 - INFO - Successfully scraped: https://www.ablison.com/pros-and-cons-of-being-a-kindergarten-teacher/
+2024-11-23 14:52:11,692 - INFO - Scraped content received for 2 URLs
+2024-11-23 14:52:18,083 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 14:52:18,083 - INFO - LLM Response:
+To be effective as a kindergarten teacher, you need to possess certain qualities and skills. First, patience is crucial. Children at this age can be unpredictable and require constant attention. They also have short attention spans, so it's important to keep lessons engaging and fun. Additionally, good communication skills are essential for effectively communicating with parents and managing challenging behavior in the classroom.
+
+In terms of teaching strategies, kindergarten teachers need to create and implement lesson plans that engage young minds and help them develop essential skills like reading, writing, and math. By using creative teaching methods such as storytelling, art projects, and hands-on activities, you can make learning fun for your students while also promoting their cognitive development.
+
+Classroom management is another key aspect of being a kindergarten teacher. You'll need to establish classroom rules and routines that promote positive behavior and create a safe learning environment. This may involve setting up a reward system for good behavior or redirecting disruptive students with gentle reminders or positive reinforcement. Effective classroom management techniques will help you maintain control over the classroom while also fostering a sense of community among your young learners.
+
+Ultimately, being effective as a kindergarten teacher requires a combination of patience, creativity, strong organizational skills, and good communication skills. By possessing these qualities and skills, you can excel in this rewarding career path.
+2024-11-23 14:52:56,313 - INFO - LLM Output in formulate_query:
+
+2024-11-23 14:52:57,596 - INFO - DDG Output in perform_search:
+
+2024-11-23 14:53:00,593 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:53:04,310 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:53:05,995 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 14:53:10,274 - INFO - Successfully scraped: https://eclkc.ohs.acf.hhs.gov/teaching-practices/article/infanttoddler-teaching-practices
+2024-11-23 14:53:11,451 - INFO - Successfully scraped: https://eclkc.ohs.acf.hhs.gov/safety-practices/article/keep-children-safe-using-active-supervision
+2024-11-23 14:53:11,451 - INFO - Scraped content received for 2 URLs
+2024-11-23 14:53:18,913 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 14:53:18,913 - INFO - LLM Response:
+To be effective as a kindergarten teacher, you should focus on developing your skills in areas such as planning, organization, and communication. Here are some specific things to learn in your first month:
+
+1. **Lesson Planning:** This is one of the most critical aspects of teaching young children. You need to plan engaging and educational lessons that cater to their individual needs and abilities.
+
+2. **Classroom Management:** Active supervision is a key element of creating a safe environment for young children. You should learn how to manage your classroom effectively, including using strategies like attention management and redundant supervision.
+
+3. **Communication:** Effective communication with parents and other staff members is crucial in ensuring the well-being and safety of young children.
+
+4. **Inclusive Teaching Practices:** This includes teaching practices that support diversity, equity, and inclusion, as well as providing a safe and welcoming environment for all children.
+
+5. **Emotional Intelligence:** This involves recognizing and managing your own emotions as well as those of children in your care. It also involves being aware of the emotional needs of children and how to provide appropriate support.
+
+6. **Resilience:** Teaching young children can be challenging, but it is essential for providing high-quality education. You should learn how to manage stress and maintain a positive attitude despite challenges in the classroom.
+
+7. **Collaboration:** Building strong relationships with colleagues and other professionals is vital in creating a supportive learning environment for young children.
+
+8. **Continuous Professional Development (CPD):** This involves ongoing learning and improvement to stay up-to-date with best practices in early childhood education.
+2024-11-23 15:04:22,592 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_150421
+
+2024-11-23 15:04:23,070 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:04:23,309 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:04:24,399 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:04:28,508 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:04:32,068 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:04:33,466 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:04:38,850 - INFO - Successfully scraped: https://www.edutopia.org/article/strategy-boosting-student-motivation-elementary-school
+2024-11-23 15:04:42,842 - INFO - Successfully scraped: https://www.extramarks.com/blogs/classroom-management-strategies-for-educators/
+2024-11-23 15:04:42,842 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:04:49,276 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 15:04:49,276 - INFO - LLM Response:
+To be effective as a kindergarten teacher in your first month, you should focus on building an authoritative personality and establishing a behaviour management system. This will help create a positive learning environment for your students and allow them to feel motivated to learn.
+
+Firstly, establish a clear and consistent classroom culture by setting high standards and providing positive feedback. This can be achieved by using positive language when correcting behavior and offering incentives for good work. You should also establish a behaviour management system that includes clear rules and consequences for misbehaviour.
+
+Secondly, build an authoritative personality by being confident, well-dressed, and having a strong presence in the room. This will help students feel respected and motivated to learn. It is important to remember that authority figures are not always seen as positive figures, so it's crucial to maintain a professional demeanor while still showing empathy and compassion towards your students.
+
+In addition, establish clear expectations for classroom behaviour and ensure that all students understand what is expected of them. This can be achieved by creating an anchor chart or poster that outlines the classroom rules and consequences.
+
+Finally, engage with your students on a personal level to build strong bonds and motivate them to learn. This can be done by asking questions about their interests, hobbies, or goals outside of class. By showing genuine interest in your students' lives, you can help create a positive learning environment that fosters academic achievement and social growth.
+
+By focusing on building an authoritative personality, establishing a behaviour management system, and engaging with your students, you can create a supportive and motivating learning environment for your kindergarten students.
+2024-11-23 15:06:19,105 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:06:20,248 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:06:20,248 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:06:22,477 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:06:24,165 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:06:27,042 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:06:33,142 - INFO - Successfully scraped: https://sajeevms.com/2024/10/30/what-makes-a-good-kindergarten-teacher-essential-skills-and-qualities/
+2024-11-23 15:06:37,664 - INFO - Successfully scraped: https://educationwalkthrough.com/qualities-of-a-good-teacher/
+2024-11-23 15:06:37,664 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:06:44,623 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:06:45,076 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:06:46,189 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:06:46,189 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:06:48,744 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:06:52,635 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:06:56,850 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:07:06,459 - INFO - Successfully scraped: https://www.teachelementary.org/effective-teaching/6-traits-effective-kindergarten-teachers/
+2024-11-23 15:07:06,459 - INFO - Scraped content received for 1 URLs
+2024-11-23 15:07:16,550 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:07:16,992 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:07:17,994 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:07:17,994 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:07:21,659 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:07:25,926 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:07:30,158 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:07:36,144 - INFO - Successfully scraped: https://eclkc.ohs.acf.hhs.gov/teaching-practices
+2024-11-23 15:07:39,992 - INFO - Successfully scraped: https://www.kindergartencafe.org/kindergarten-classroom-management-setting-the-foundation-for-success/
+2024-11-23 15:07:39,992 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:07:46,489 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:07:46,862 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:07:48,029 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:07:48,029 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:07:52,192 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:07:54,046 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:07:56,042 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:08:05,142 - INFO - Successfully scraped: https://sajeevms.com/2024/10/30/what-makes-a-good-kindergarten-teacher-essential-skills-and-qualities/
+2024-11-23 15:08:07,792 - INFO - Successfully scraped: https://www.myteachingcupboard.com/blog/successful-play-based-kindergarten-teacher
+2024-11-23 15:08:07,792 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:08:14,293 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:08:14,852 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:08:15,642 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:08:16,412 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:08:17,461 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:08:17,461 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:08:21,774 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:08:24,326 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:08:28,105 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:08:31,375 - INFO - Successfully scraped: https://hbr.org/2023/12/8-essential-qualities-of-successful-leaders
+2024-11-23 15:08:31,909 - INFO - Successfully scraped: https://www.wikihow.com/Be-More-Effective-at-Work
+2024-11-23 15:08:31,909 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:08:39,264 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:08:39,892 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 15:16:55,377 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_151654
+
+2024-11-23 15:16:56,529 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:16:59,542 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:17:01,703 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:17:03,568 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:17:10,294 - INFO - Successfully scraped: https://www.teachelementary.org/effective-teaching/6-traits-effective-kindergarten-teachers/
+2024-11-23 15:17:10,294 - INFO - Scraped content received for 1 URLs
+2024-11-23 15:17:19,198 - INFO - LLM Output in generate_final_answer:
+Creating new research session: 20241123_151716
+Created message queue for session 20241123_151716
+Cleaned up session resources for 20241123_151654
+WebSocket disconnected for session 20241123_151654
+Stopping message processing for session 20241123_151654
+WebSocket connected for session 20241123_151716
+
+2024-11-23 15:17:19,198 - INFO - LLM Response:
+To be effective as a kindergarten teacher, you should have several key traits:
+
+1. Passion for teaching: Kindergarten is a pivotal year in a child's academic development. It's crucial that your passion for what you do sets the tone for your students' opinion about school and learning.
+
+2. Patience: Small children are unpredictable, and they may test their teacher's patience regularly by being easily distracted or disruptive. You must be able to adjust lesson plans accordingly and not get stressed out over unforeseen issues.
+
+3. Intrinsic motivation: If teaching doesn't ignite the passion inside of a person, then it might not be the right career for them. Patience is a must when teaching kindergarten, especially on days when some students are tired, hungry, or not feeling well.
+
+4. Ability to deal with behavior issues: Kindergarten children can be difficult at times, and you'll need to be able to manage their behavior appropriately. This includes dealing with issues like being overly distracted or disruptive, as well as managing potential behavioral problems from other children.
+
+5. Good communication skills: Parents can be challenging to deal with, especially when they're upset or frustrated. You must have the patience to explain the way things work and ease their minds when they are upset or feeling overwhelmed by the education system.
+
+6. Flexibility: Kindergarten is a year of discovery for young children, and you need to be flexible enough to adapt your teaching approach as needed based on the unique needs of each student in the classroom.
+
+7. Ability to manage your emotions: Teaching can be stressful at times, especially when dealing with challenging behaviors or difficult parents. You must have a good ability to manage your emotions and maintain a calm demeanor under pressure.
+
+8. Creativity: Kindergarten is a year of discovery for young children, and you need to be creative in the ways you teach and engage your students. This includes using play-based learning techniques, hands-on activities, and projects that promote learning through exploration and experimentation.
+
+9. Good interpersonal skills: You'll interact with parents, other teachers, and staff members throughout the year. It's important to have good interpersonal skills to maintain positive relationships and ensure a smooth operation of the school.
+
+10. Ability to reflect on your teaching practice: As you progress in your career as a kindergarten teacher, it's crucial that you continue to reflect on your teaching practices and make improvements based on what you learn from your experiences.
+2024-11-23 15:17:19,642 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_151716
+
+2024-11-23 15:17:20,685 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:17:24,603 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:17:28,735 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:17:32,996 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:17:40,196 - INFO - Successfully scraped: https://www.teachelementary.org/effective-teaching/6-traits-effective-kindergarten-teachers/
+2024-11-23 15:17:40,197 - INFO - Scraped content received for 1 URLs
+2024-11-23 15:17:50,606 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 15:17:50,606 - INFO - LLM Response:
+Effective kindergarten teachers should possess certain traits such as a passion for teaching, patience, intrinsic motivation, and the ability to adjust lesson plans accordingly. They should also be able to manage their own emotions and stress levels, as well as deal with challenging situations like difficult behavior from students or parents. Additionally, they should have good communication skills, be able to connect with children on an emotional level, and understand that every child learns at a different pace.
+
+In terms of what you can learn in your first month as a kindergarten teacher, here are some key things to focus on:
+
+1. Classroom Management: Establishing clear rules and routines is crucial for maintaining order and ensuring students feel safe and secure.
+2. Social-Emotional Learning: Kindergarten teachers play a critical role in teaching children social-emotional skills like sharing, taking turns, and cooperation. Focus on creating a positive and supportive classroom environment that encourages these behaviors.
+
+3. Classroom Environment: Create a welcoming and inclusive space for all students by incorporating colorful materials, toys, and activities that promote exploration and discovery.
+
+4. Lesson Planning: Develop lesson plans that align with the kindergarten curriculum and include engaging, interactive, and challenging activities to keep students motivated and engaged.
+
+5. Communication: Regularly communicate with parents about their child's progress, address any concerns they may have, and provide updates on your teaching practices and classroom management strategies.
+
+6. Self-Care: Maintain a healthy work-life balance by setting boundaries between school and personal life, taking breaks when needed, and engaging in activities that nourish both body and mind.
+
+7. Professional Development: Stay up-to-date with the latest research and best practices in kindergarten education by attending workshops, conferences, and online resources.
+
+8. Collaboration: Work collaboratively with colleagues to share ideas, support one another, and create a positive learning environment for all students.
+
+9. Flexibility: Be prepared to adjust your lesson plans and classroom management strategies as needed due to changing circumstances or unexpected challenges.
+
+10. Empathy and Patience: Remain patient and empathetic when dealing with challenging situations, such as difficult behavior from children or parents who may be upset about their child's progress.
+
+By focusing on these traits and taking the time to learn and grow in your first month as a kindergarten teacher, you can set yourself up for success and establish a positive, supportive learning environment for all students.
+2024-11-23 15:23:41,796 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_152341
+
+2024-11-23 15:23:43,018 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:23:43,018 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:23:44,854 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:23:48,525 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:23:52,174 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:24:06,031 - INFO - Successfully scraped: https://growplant.org/blog/mushrooms-life-cycle/
+2024-11-23 15:24:10,797 - INFO - Successfully scraped: https://www.smorescience.com/how-are-mushrooms-grown/
+2024-11-23 15:24:10,797 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:24:18,568 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:24:18,892 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:24:19,164 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:24:20,108 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:24:20,108 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:24:24,142 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:24:27,770 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:24:29,442 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:24:39,121 - INFO - Successfully scraped: https://www.smorescience.com/how-are-mushrooms-grown/
+2024-11-23 15:24:40,761 - INFO - Successfully scraped: https://growplant.org/blog/mushrooms-life-cycle/
+2024-11-23 15:24:40,761 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:24:46,813 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:24:47,064 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:24:47,343 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:24:48,350 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:24:48,350 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:24:52,592 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:24:54,570 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:24:58,271 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:25:08,699 - INFO - Successfully scraped: https://asm.org/Articles/2021/January/Three-Reasons-Fungi-Are-Not-Plants
+2024-11-23 15:25:09,605 - INFO - Successfully scraped: https://www.montereymushrooms.com/blog/mushroom-myths-0
+2024-11-23 15:25:09,605 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:25:16,018 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:25:16,430 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:25:16,816 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:25:17,896 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:25:17,896 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:25:22,221 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:25:25,905 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:25:28,445 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:25:34,777 - INFO - Successfully scraped: https://asm.org/Articles/2021/January/Three-Reasons-Fungi-Are-Not-Plants
+2024-11-23 15:25:36,723 - INFO - Successfully scraped: https://www.nationalgeographic.com/science/article/kingdom-funga-fungi
+2024-11-23 15:25:36,723 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:25:42,253 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:25:42,568 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:25:42,730 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:25:43,150 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:25:44,201 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:25:44,201 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:25:47,842 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:25:50,762 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:25:53,292 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:26:03,292 - INFO - Successfully scraped: https://asm.org/Articles/2021/January/Three-Reasons-Fungi-Are-Not-Plants
+2024-11-23 15:26:09,274 - INFO - Successfully scraped: https://theshroomgroove.com/why-mushrooms-belong-to-their-own-kingdom-not-the-plant-world/
+2024-11-23 15:26:09,274 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:26:16,919 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:26:17,492 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 15:28:53,692 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_152853
+
+2024-11-23 15:28:53,933 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:28:55,097 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:28:55,097 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:28:59,297 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:29:02,914 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:29:04,767 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:29:10,778 - INFO - Successfully scraped: https://en.wikipedia.org/wiki/Amanita_muscaria
+2024-11-23 15:29:12,092 - INFO - Successfully scraped: https://www.seriouseats.com/types-of-mushrooms-8713510
+2024-11-23 15:29:12,092 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:29:16,547 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:29:16,693 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:29:16,809 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:29:17,854 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:29:17,854 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:29:22,118 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:29:25,067 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:29:28,760 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:29:37,442 - INFO - Successfully scraped: https://asm.org/Articles/2021/January/Three-Reasons-Fungi-Are-Not-Plants
+2024-11-23 15:29:40,378 - INFO - Successfully scraped: https://www.scienceiq.com/facts/aremushroomsplants.cfm
+2024-11-23 15:29:40,378 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:29:44,606 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:29:44,842 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:29:45,129 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:29:46,203 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:29:46,203 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:29:50,469 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:29:54,092 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:29:57,446 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:30:05,242 - INFO - Successfully scraped: https://www.montereymushrooms.com/blog/mushroom-myths-0
+2024-11-23 15:30:08,842 - INFO - Successfully scraped: https://mushroom-growing.com/why-is-a-mushroom-not-a-plant/
+2024-11-23 15:30:08,842 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:30:16,374 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:30:16,744 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:30:17,788 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:30:17,788 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:30:22,016 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:30:24,132 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:30:24,615 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:30:33,614 - INFO - Successfully scraped: https://www.smorescience.com/how-are-mushrooms-grown/
+2024-11-23 15:30:35,024 - INFO - Successfully scraped: https://en.wikipedia.org/wiki/Fungus
+2024-11-23 15:30:35,024 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:30:42,322 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:30:42,792 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:30:43,821 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:30:43,821 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:30:48,268 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:30:50,377 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:30:53,350 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:31:04,292 - INFO - Successfully scraped: https://www.smorescience.com/how-are-mushrooms-grown/
+2024-11-23 15:31:04,724 - INFO - Successfully scraped: https://www.usatoday.com/story/life/health-wellness/2024/11/16/are-mushrooms-good-for-you/76058920007/
+2024-11-23 15:31:04,724 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:31:11,911 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:31:12,612 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 15:33:03,558 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_153303
+
+2024-11-23 15:33:04,689 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:33:08,571 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:33:12,224 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:33:15,802 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:33:24,749 - INFO - Successfully scraped: https://asm.org/Articles/2021/January/Three-Reasons-Fungi-Are-Not-Plants
+2024-11-23 15:33:28,310 - INFO - Successfully scraped: https://mushroom-growing.com/why-is-a-mushroom-not-a-plant/
+2024-11-23 15:33:28,310 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:33:31,880 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 15:33:31,880 - INFO - LLM Response:
+Mushrooms are not plants because they belong to a different kingdom of organisms. Mushrooms are actually fungi, which means they have a unique biological structure that sets them apart from plants. One of the main reasons why mushrooms are classified as fungi is because they obtain nutrients through absorption rather than photosynthesis, like plants do.
+
+Another reason mushrooms don't fit into the plant category is their lack of chlorophyll. Chlorophyll is a pigment found in plants that helps them make food through photosynthesis. Mushrooms, on the other hand, cannot perform photosynthesis and therefore lack chlorophyll.
+
+Lastly, the cell walls of fungi like mushrooms are composed of chitin, not cellulose, which is the main component of plant cell walls. This difference in cell wall composition further solidifies the distinction between fungi and plants.
+2024-11-23 15:44:05,653 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_154405
+
+2024-11-23 15:44:06,860 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:44:06,860 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:44:10,992 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:44:14,242 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:44:17,508 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:44:24,145 - INFO - Successfully scraped: https://huggingface.co/collections/open-llm-leaderboard/open-llm-leaderboard-best-models-652d6c7965a4619fb5c27a03
+2024-11-23 15:44:25,542 - INFO - Successfully scraped: https://www.analyticsvidhya.com/blog/2024/04/smallest-llms-that-you-can-run-on-local-devices/
+2024-11-23 15:44:25,542 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:44:34,462 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:44:34,907 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:44:35,935 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:44:35,935 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:44:40,307 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:44:44,019 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:44:47,708 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:44:55,385 - INFO - Successfully scraped: https://www.marktechpost.com/2024/11/22/meet-balrog-a-novel-ai-benchmark-evaluating-agentic-llm-and-vlm-capabilities-on-long-horizon-interactive-tasks-using-reinforcement-learning-environment/
+2024-11-23 15:44:58,242 - INFO - Successfully scraped: https://infohub.delltechnologies.com/p/the-rise-of-agentic-rag-systems/
+2024-11-23 15:44:58,242 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:45:07,892 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:45:08,305 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:45:09,342 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:45:09,342 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:45:13,579 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:45:15,969 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:45:19,742 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:45:24,743 - INFO - Successfully scraped: https://www.alexanderthamm.com/en/blog/multi-agent-llm-systems/
+2024-11-23 15:45:25,030 - INFO - Successfully scraped: https://devblogs.microsoft.com/semantic-kernel/microsofts-agentic-ai-frameworks-autogen-and-semantic-kernel/
+2024-11-23 15:45:25,030 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:45:34,193 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:45:34,573 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:45:34,828 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:45:35,274 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:45:36,306 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:45:36,306 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:45:40,942 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:45:44,025 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:45:48,594 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:45:52,662 - INFO - Successfully scraped: https://huggingface.co/collections/open-llm-leaderboard/open-llm-leaderboard-best-models-652d6c7965a4619fb5c27a03
+2024-11-23 15:45:54,996 - INFO - Successfully scraped: https://www.analyticsvidhya.com/blog/2024/04/smallest-llms-that-you-can-run-on-local-devices/
+2024-11-23 15:45:54,996 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:46:06,792 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:46:07,182 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:46:07,542 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:46:08,074 - INFO - LLM Output in formulate_query:
+
+2024-11-23 15:46:09,159 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:46:09,159 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 15:46:14,517 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:46:17,359 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:46:21,501 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:46:26,622 - INFO - Successfully scraped: https://www.ibm.com/think/insights/agentic-ai
+2024-11-23 15:46:26,936 - INFO - Successfully scraped: https://devblogs.microsoft.com/semantic-kernel/microsofts-agentic-ai-frameworks-autogen-and-semantic-kernel/
+2024-11-23 15:46:26,936 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:46:33,519 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 15:46:34,122 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 15:48:12,573 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_154812
+
+2024-11-23 15:48:13,729 - INFO - DDG Output in perform_search:
+
+2024-11-23 15:48:18,042 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:48:21,765 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:48:22,998 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 15:48:28,925 - INFO - Successfully scraped: https://www.analyticsvidhya.com/blog/2024/04/smallest-llms-that-you-can-run-on-local-devices/
+2024-11-23 15:48:30,779 - INFO - Successfully scraped: https://www.alexanderthamm.com/en/blog/multi-agent-llm-systems/
+2024-11-23 15:48:30,779 - INFO - Scraped content received for 2 URLs
+2024-11-23 15:48:39,499 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 15:48:39,499 - INFO - LLM Response:
+The best small LLM for agentic capabilities depends on several factors such as the specific task you want to accomplish, the complexity of the task, and the available computing resources. However, based on the information provided in the scraped content, it seems that Hugging Face's Link models are particularly useful for this purpose.
+
+Hugging Face Link models are designed to be smaller and more portable than other large language models, making them ideal for running on local devices or in environments where access to a powerful server is limited. They also offer a range of pre-trained models with varying levels of complexity and capability, allowing you to choose the model that best suits your needs.
+
+For agentic capabilities, Hugging Face Link models like DistilBERT, TinyBERT, MobileBERT, ALBERT, GPT-2, DeciCoder - 1B, Phi-1.5, Dolly-v2-3b, StableLM-Zephyr-3B, DeciLM-7B, Mistral-7B-Instruct-v0.2, Orca-2-7B, Amber, OpenHathi-7B-Hi-v0.1-Base, SOLAR-10.7B-v1.0, and NexusRaven-V2-13B are all suitable options.
+
+In summary, Hugging Face Link models offer a convenient and efficient way to run small LLMs for agentic capabilities on local devices or in environments where access to a powerful server is limited. They provide pre-trained models with varying levels of complexity and capability, allowing you to choose the model that best suits your needs.
+2024-11-23 16:39:50,476 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_163949
+
+2024-11-23 16:39:51,249 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:39:51,659 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:39:52,721 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:39:52,721 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:39:56,942 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:39:58,960 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:40:02,628 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:40:06,532 - INFO - Successfully scraped: https://www.wikihow.com/Be-a-Good-Person
+2024-11-23 16:40:09,333 - INFO - Successfully scraped: https://www.aconsciousrethink.com/16284/qualities-of-a-good-person/
+2024-11-23 16:40:09,333 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:40:16,457 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:40:16,934 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:40:17,977 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:40:17,977 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:40:22,242 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:40:25,682 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:40:29,355 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:40:39,950 - INFO - Successfully scraped: https://zapier.com/blog/better-memory/
+2024-11-23 16:40:45,771 - INFO - Successfully scraped: https://www.speedreadinglounge.com/memory-techniques
+2024-11-23 16:40:45,771 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:40:54,045 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:40:54,473 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:40:55,471 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:40:55,471 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:40:59,842 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:41:01,973 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:41:05,457 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:41:20,881 - INFO - Successfully scraped: https://lindamoodbell.com/comprehension/effective-reading-comprehension-strategies-for-student-success
+2024-11-23 16:41:24,390 - INFO - Successfully scraped: https://greatminds.org/english/blog/geodes/the-path-to-reading-proficiency
+2024-11-23 16:41:24,391 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:41:32,042 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:41:32,565 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:41:33,639 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:41:33,639 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:41:37,896 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:41:41,599 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:41:45,001 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:41:51,225 - INFO - Successfully scraped: https://zapier.com/blog/better-memory/
+2024-11-23 16:41:56,174 - INFO - Successfully scraped: https://www.lifeoptimizer.org/2016/04/05/how-to-read-faster-and-remember-more/
+2024-11-23 16:41:56,174 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:42:02,104 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:42:02,497 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:42:03,644 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:42:03,644 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:42:07,912 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:42:10,358 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:42:14,023 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:43:03,624 - INFO - Successfully scraped: https://www.preplounge.com/en/articles/speed-reading-techniques
+2024-11-23 16:43:05,992 - INFO - Successfully scraped: https://www.speedreadingtechniques.org/how-to-speed-read
+2024-11-23 16:43:05,992 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:43:10,792 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:43:11,292 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 16:43:55,210 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:43:55,623 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:43:56,753 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:44:00,925 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:44:03,077 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:44:03,692 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:44:11,244 - INFO - Successfully scraped: https://www.youtube.com/watch?v=JbR2yjK1zt8
+2024-11-23 16:44:15,868 - INFO - Successfully scraped: https://www.courselounge.com/speed-reading-techniques/
+2024-11-23 16:44:15,868 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:47:38,370 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:47:39,500 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:47:43,159 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:47:45,922 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:47:48,455 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:47:54,313 - INFO - Successfully scraped: https://www.wikihow.com/Memorise-Long-Text-in-the-Shortest-Amount-of-Time-Possible
+2024-11-23 16:47:57,462 - INFO - Successfully scraped: https://www.schooldrillers.com/best-memory-techniques-for-studying/
+2024-11-23 16:47:57,462 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:50:16,408 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_165015
+
+2024-11-23 16:50:16,715 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:50:17,839 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:50:22,038 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:50:25,107 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:50:27,330 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:50:32,421 - INFO - Successfully scraped: https://zapier.com/blog/better-memory/
+2024-11-23 16:50:35,837 - INFO - Successfully scraped: https://gitmind.com/memorization-technique.html
+2024-11-23 16:50:35,837 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:54:21,759 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:54:22,861 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:54:22,861 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:54:27,031 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:54:30,462 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:54:34,088 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:54:42,164 - INFO - Successfully scraped: https://2sistersgarlic.com/how-to-learn-rapidly-strategies-for-fast-and-effective-mastery/
+2024-11-23 16:54:44,974 - INFO - Successfully scraped: https://www.calltutors.com/blog/improve-your-learning-skills/
+2024-11-23 16:54:44,974 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:54:54,444 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:54:55,242 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:54:56,060 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:54:56,346 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:54:57,358 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:54:57,359 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:55:01,312 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:55:04,981 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:55:08,685 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:55:13,430 - INFO - Successfully scraped: https://www.wikihow.com/Be-a-Good-Person
+2024-11-23 16:55:13,826 - INFO - Successfully scraped: https://www.wikihow.com/Be-a-Better-Person
+2024-11-23 16:55:13,826 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:55:21,681 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:55:22,044 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:55:22,243 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:55:22,577 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:55:23,773 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:55:23,773 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:55:27,908 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:55:31,592 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:55:34,739 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:55:38,816 - INFO - Successfully scraped: https://www.wikihow.com/Be-a-Good-Person
+2024-11-23 16:55:41,206 - INFO - Successfully scraped: https://www.aconsciousrethink.com/16284/qualities-of-a-good-person/
+2024-11-23 16:55:41,206 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:55:49,861 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:55:50,189 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:55:51,282 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:55:51,284 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:55:53,681 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:55:57,391 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:56:01,191 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:56:23,344 - INFO - Successfully scraped: https://www.speedreadinglounge.com/memory-techniques
+2024-11-23 16:56:30,248 - INFO - Successfully scraped: https://rapidreadinghub.com/reading-and-memory-techniques/
+2024-11-23 16:56:30,248 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:56:39,494 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:56:40,048 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:56:41,156 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:56:41,156 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:56:45,455 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:56:48,842 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:56:52,421 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:56:56,345 - INFO - Successfully scraped: https://learningcenter.unc.edu/tips-and-tools/enhancing-your-memory/
+2024-11-23 16:56:56,910 - INFO - Successfully scraped: https://www.structural-learning.com/post/8-effective-memorization-techniques
+2024-11-23 16:56:56,910 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:57:06,825 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:57:07,145 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 16:59:18,368 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:59:18,806 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:59:19,856 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:59:19,856 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:59:23,098 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:59:26,740 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:59:30,377 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:59:39,624 - INFO - Successfully scraped: https://zapier.com/blog/better-memory/
+2024-11-23 16:59:44,142 - INFO - Successfully scraped: https://www.speedreadinglounge.com/memory-techniques
+2024-11-23 16:59:44,142 - INFO - Scraped content received for 2 URLs
+2024-11-23 16:59:51,123 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 16:59:51,533 - INFO - LLM Output in formulate_query:
+
+2024-11-23 16:59:52,642 - INFO - DDG Output in perform_search:
+
+2024-11-23 16:59:52,642 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 16:59:56,138 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 16:59:57,535 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:00:01,682 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:00:21,307 - INFO - Successfully scraped: https://www.courselounge.com/speed-reading-techniques/
+2024-11-23 17:00:26,515 - INFO - Successfully scraped: https://www.speedreadinglounge.com/online-speed-reading-course
+2024-11-23 17:00:26,515 - INFO - Scraped content received for 2 URLs
+2024-11-23 17:00:34,016 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 17:00:34,650 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:00:35,722 - INFO - DDG Output in perform_search:
+
+2024-11-23 17:00:35,722 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 17:00:40,768 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:00:44,958 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:00:48,634 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:00:54,716 - INFO - Successfully scraped: https://www.wikihow.com/Memorize-Quickly
+2024-11-23 17:00:56,752 - INFO - Successfully scraped: https://blog.mindvalley.com/how-to-read-faster/
+2024-11-23 17:00:56,752 - INFO - Scraped content received for 2 URLs
+2024-11-23 17:01:04,560 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 17:01:05,672 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:01:05,992 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:01:07,001 - INFO - DDG Output in perform_search:
+
+2024-11-23 17:01:07,001 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 17:01:12,283 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:01:13,916 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:01:17,935 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:01:24,969 - INFO - Successfully scraped: https://www.calltutors.com/blog/how-to-study-effectively/
+2024-11-23 17:01:25,395 - INFO - Successfully scraped: https://timesofindia.indiatimes.com/education/web-stories/9-ways-students-can-sharpen-their-memory-for-board-exams/photostory/115597025.cms
+2024-11-23 17:01:25,395 - INFO - Scraped content received for 2 URLs
+2024-11-23 17:01:35,318 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 17:01:35,729 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:01:35,999 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:01:36,506 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:01:37,661 - INFO - DDG Output in perform_search:
+
+2024-11-23 17:01:37,661 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 17:01:39,892 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:01:43,623 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:01:47,168 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:01:53,388 - INFO - Successfully scraped: https://zapier.com/blog/better-memory/
+2024-11-23 17:01:57,719 - INFO - Successfully scraped: https://www.speedreadinglounge.com/memory-techniques
+2024-11-23 17:01:57,719 - INFO - Scraped content received for 2 URLs
+2024-11-23 17:02:03,937 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 17:02:04,481 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 17:05:14,952 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:05:16,025 - INFO - DDG Output in perform_search:
+
+2024-11-23 17:05:19,802 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:05:23,434 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:05:27,115 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:05:36,954 - INFO - Successfully scraped: https://www.speedreadinglounge.com/memory-techniques
+2024-11-23 17:05:37,903 - INFO - Successfully scraped: https://www.healthline.com/health/how-to-improve-memory
+2024-11-23 17:05:37,903 - INFO - Scraped content received for 2 URLs
+2024-11-23 17:18:53,176 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_171852
+
+2024-11-23 17:18:54,411 - INFO - DDG Output in perform_search:
+
+2024-11-23 17:18:54,411 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 17:18:57,930 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:19:00,803 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:19:02,311 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:19:09,992 - INFO - Successfully scraped: https://pmc.ncbi.nlm.nih.gov/articles/PMC8470268/
+2024-11-23 17:19:13,547 - INFO - Successfully scraped: https://www.health.harvard.edu/heart-health/dietary-salt-and-blood-pressure-a-complex-connection
+2024-11-23 17:19:13,547 - INFO - Scraped content received for 2 URLs
+2024-11-23 17:19:23,587 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 17:19:24,093 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:19:24,553 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:19:25,792 - INFO - DDG Output in perform_search:
+
+2024-11-23 17:19:25,792 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 17:19:30,410 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:19:34,787 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:19:37,836 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:19:45,314 - INFO - Successfully scraped: https://www.health.harvard.edu/heart-health/dietary-salt-and-blood-pressure-a-complex-connection
+2024-11-23 17:19:46,603 - INFO - Successfully scraped: https://pmc.ncbi.nlm.nih.gov/articles/PMC5098396/
+2024-11-23 17:19:46,603 - INFO - Scraped content received for 2 URLs
+2024-11-23 17:19:59,164 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 17:19:59,642 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:20:00,653 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:20:00,977 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:20:02,074 - INFO - DDG Output in perform_search:
+
+2024-11-23 17:20:02,074 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 17:20:07,212 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:20:10,742 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:20:15,219 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:20:20,538 - INFO - Successfully scraped: https://www.healthline.com/health/vaccinations/side-effects-of-covid-19-vaccine
+2024-11-23 17:20:21,200 - INFO - Successfully scraped: https://www.mayoclinic.org/diseases-conditions/high-blood-cholesterol/in-depth/statin-side-effects/art-20046013
+2024-11-23 17:20:21,201 - INFO - Scraped content received for 2 URLs
+2024-11-23 17:20:30,530 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:20:31,532 - INFO - DDG Output in perform_search:
+
+2024-11-23 17:20:31,533 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 17:20:36,279 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:20:40,857 - INFO - LLM Output in select_relevant_pages:
+Cleaned up session resources for 20241123_171852
+WebSocket disconnected for session 20241123_171852
+Stopping message processing for session 20241123_171852
+Error stopping research: 'AsyncSearchEngine' object has no attribute 'stop'
+Traceback (most recent call last):
+  File "C:\Workspace\WebResearcher\WebReasearcher\api\session_manager.py", line 157, in stop_research
+    search_engine.stop()
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'AsyncSearchEngine' object has no attribute 'stop'
+Error stopping research: 'AsyncSearchEngine' object has no attribute 'stop'
+Traceback (most recent call last):
+  File "C:\Workspace\WebResearcher\WebReasearcher\api\session_manager.py", line 157, in stop_research
+    search_engine.stop()
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'AsyncSearchEngine' object has no attribute 'stop'
+Error cleaning up session: 'AsyncSearchEngine' object has no attribute 'stop'
+Traceback (most recent call last):
+  File "C:\Workspace\WebResearcher\WebReasearcher\api\session_manager.py", line 190, in cleanup_session
+    search_engine.stop()
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'AsyncSearchEngine' object has no attribute 'stop'
+
+2024-11-23 17:20:45,259 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 17:20:52,187 - ERROR - An error occurred during search: cannot schedule new futures after interpreter shutdown
+Traceback (most recent call last):
+  File "C:\Workspace\WebResearcher\WebReasearcher\Self_Improving_Search.py", line 143, in search_and_improve
+    scraped_content = self.scrape_content(selected_urls)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Workspace\WebResearcher\WebReasearcher\Self_Improving_Search.py", line 400, in scrape_content
+    content = get_web_content([url])
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Workspace\WebResearcher\WebReasearcher\web_scraper.py", line 123, in get_web_content
+    scraped_data = scrape_multiple_pages(urls)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Workspace\WebResearcher\WebReasearcher\web_scraper.py", line 106, in scrape_multiple_pages
+    future_to_url = {executor.submit(scraper.scrape_page, url): url for url in urls}
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Workspace\WebResearcher\WebReasearcher\web_scraper.py", line 106, in <dictcomp>
+    future_to_url = {executor.submit(scraper.scrape_page, url): url for url in urls}
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 169, in submit
+    raise RuntimeError('cannot schedule new futures after '
+RuntimeError: cannot schedule new futures after interpreter shutdown
+2024-11-23 17:20:52,736 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:20:53,019 - INFO - LLM Output in formulate_query:
+
+2024-11-23 17:20:53,669 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 18:37:49,320 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_183739
+Starting message processing for session 20241123_183739
+
+2024-11-23 18:37:50,748 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:37:50,748 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:37:55,292 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:37:59,662 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:38:04,100 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:38:10,092 - INFO - Successfully scraped: https://gamerant.com/best-cpus-rtx-4060-ti-gaming/
+2024-11-23 18:38:10,092 - INFO - Scraped content received for 1 URLs
+2024-11-23 18:38:16,817 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 18:38:17,498 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:38:18,464 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:38:18,878 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:38:20,206 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:38:20,206 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:38:23,292 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:38:25,213 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:38:29,542 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:38:33,306 - INFO - Successfully scraped: https://www.intel.com/content/www/us/en/support/articles/000025102/processors/intel-core-processors.html
+2024-11-23 18:38:33,605 - INFO - Successfully scraped: https://www.intel.com/content/www/us/en/support/topics/compatibility.html
+2024-11-23 18:38:33,605 - INFO - Scraped content received for 2 URLs
+2024-11-23 18:38:41,743 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 18:38:42,206 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:38:43,261 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:38:43,261 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:38:46,121 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:38:48,942 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:38:51,492 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:38:53,822 - INFO - Successfully scraped: https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q11307090841
+2024-11-23 18:38:53,822 - INFO - Scraped content received for 1 URLs
+2024-11-23 18:38:56,334 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:38:56,701 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:38:58,015 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:38:58,015 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:39:03,674 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:39:08,258 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:39:12,849 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:39:18,899 - INFO - Successfully scraped: https://www.windowscentral.com/gaming/pc-gaming/best-cpu-for-nvidia-rtx-4060
+2024-11-23 18:39:21,872 - INFO - Successfully scraped: https://community.intel.com/t5/Processors/P-8136-SR2YN-Compatibility/m-p/1644480
+2024-11-23 18:39:21,872 - INFO - Scraped content received for 2 URLs
+2024-11-23 18:39:31,765 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 18:39:32,221 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:39:32,479 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:39:33,733 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:39:33,742 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 18:39:38,287 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:39:42,220 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:39:46,814 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:39:53,015 - INFO - Successfully scraped: https://gamerant.com/best-cpus-rtx-4060-ti-gaming/
+2024-11-23 18:39:53,015 - INFO - Scraped content received for 1 URLs
+2024-11-23 18:39:59,743 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 18:40:00,532 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 18:41:29,484 - INFO - LLM Output in formulate_query:
+WebSocket connected for session 20241123_184128
+Starting message processing for session 20241123_184128
+
+2024-11-23 18:41:30,308 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:41:30,848 - INFO - LLM Output in formulate_query:
+
+2024-11-23 18:41:31,873 - INFO - DDG Output in perform_search:
+
+2024-11-23 18:41:36,144 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:41:39,837 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:41:43,957 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 18:41:48,452 - INFO - Successfully scraped: https://www.verywellmind.com/signs-you-and-your-partner-compatible-7562809
+2024-11-23 18:41:50,117 - INFO - Successfully scraped: https://www.psychologytoday.com/us/blog/loving-bravely/202107/how-couples-know-theyre-compatible
+2024-11-23 18:41:50,117 - INFO - Scraped content received for 2 URLs

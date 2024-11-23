@@ -23,6 +23,20 @@ class ResearchResponse(BaseModel):
     message: Optional[str] = None
     data: Optional[Dict[str, Any]] = None
 
+class ResearchSession(BaseModel):
+    session_id: str
+    query: str
+    mode: str
+    status: str
+    start_time: str
+    end_time: Optional[str] = None
+    result: Optional[str] = None
+    settings: Optional[Dict[str, Any]] = None
+    research_details: Optional[Dict[str, Any]] = None
+
+    class Config:
+        orm_mode = True
+
 class FocusArea(BaseModel):
     area: str
     priority: int

@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from datetime import datetime
 from concurrent.futures import Future, ThreadPoolExecutor
 import traceback
@@ -8,17 +8,19 @@ from llm_response_parser import UltimateLLMResponseParser
 from .models import ResearchRequest, SearchSettings, WebSocketMessage
 from .search_engine_manager import AsyncSearchEngine
 from .websocket_manager import WebSocketManager
+from .database import DatabaseManager
 
 class SessionManager:
     def __init__(self, llm: LLMWrapper, parser: UltimateLLMResponseParser, websocket_manager: WebSocketManager):
         self.llm = llm
         self.parser = parser
         self.websocket_manager = websocket_manager
-        self.executor = ThreadPoolExecutor(max_workers=5)  # Increased for better concurrency
+        self.executor = ThreadPoolExecutor(max_workers=5)
         self.research_sessions: Dict[str, Dict] = {}
         self.active_tasks: Dict[str, Future] = {}
+        self.db = DatabaseManager()
 
-    def create_session(self) -> str:
+    def create_session(self, query: str = "", mode: str = "research") -> str:
         """Create a new research session with improved initialization"""
         try:
             session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -27,16 +29,21 @@ class SessionManager:
             # Initialize message queue
             message_queue = self.websocket_manager.get_message_queue(session_id)
             
-            # Initialize session state
-            self.research_sessions[session_id] = {
+            # Initialize session state with required fields
+            session_data = {
                 "status": "pending",
                 "created_at": datetime.now().isoformat(),
                 "last_active": datetime.now().isoformat(),
                 "search_engine": None,
                 "settings": None,
-                "query": None,
-                "mode": None
+                "query": query,  # Ensure query is set
+                "mode": mode    # Ensure mode is set
             }
+            
+            self.research_sessions[session_id] = session_data
+            
+            # Save to database with required fields
+            self.db.save_session(session_id, session_data)
             
             return session_id
             
@@ -46,7 +53,7 @@ class SessionManager:
             raise
 
     def initialize_session(self, session_id: str, request: ResearchRequest) -> AsyncSearchEngine:
-        """Initialize a research session with improved error handling"""
+        """Initialize a research session with database updates"""
         try:
             # Validate session exists
             if session_id not in self.research_sessions:
@@ -74,14 +81,19 @@ class SessionManager:
             )
 
             # Update session info
-            self.research_sessions[session_id].update({
+            session_data = {
                 "query": request.query,
                 "mode": request.mode,
                 "status": "starting",
                 "search_engine": search_engine,
                 "settings": settings,
                 "last_active": datetime.now().isoformat()
-            })
+            }
+            
+            self.research_sessions[session_id].update(session_data)
+            
+            # Update database
+            self.db.save_session(session_id, session_data)
 
             # Send initial status
             message_queue = self.websocket_manager.get_message_queue(session_id)
@@ -103,14 +115,22 @@ class SessionManager:
             raise
 
     def get_session(self, session_id: str) -> Optional[Dict]:
-        """Get session information with validation"""
+        """Get session information from memory or database"""
+        # First try memory
         session = self.research_sessions.get(session_id)
         if session:
             session["last_active"] = datetime.now().isoformat()
-        return session
+            return session
+            
+        # If not in memory, try database
+        return self.db.get_session(session_id)
+
+    def get_all_sessions(self) -> List[Dict]:
+        """Get all research sessions from database"""
+        return self.db.get_all_sessions()
 
     def start_research(self, session_id: str, query: str) -> Future:
-        """Start research process with improved error handling"""
+        """Start research process with database updates"""
         try:
             session = self.get_session(session_id)
             if not session:
@@ -123,6 +143,9 @@ class SessionManager:
             # Update session status
             session["status"] = "running"
             session["last_active"] = datetime.now().isoformat()
+            
+            # Update database
+            self.db.update_session_status(session_id, "running")
 
             # Start research in background
             future = self.executor.submit(search_engine.search_and_improve, query)
@@ -145,7 +168,7 @@ class SessionManager:
             raise
 
     def stop_research(self, session_id: str) -> None:
-        """Stop ongoing research with cleanup"""
+        """Stop ongoing research with database updates"""
         try:
             session = self.get_session(session_id)
             if not session:
@@ -165,6 +188,9 @@ class SessionManager:
             # Update session status
             session["status"] = "stopped"
             session["last_active"] = datetime.now().isoformat()
+            
+            # Update database
+            self.db.update_session_status(session_id, "stopped")
 
             # Send status update
             message_queue = self.websocket_manager.get_message_queue(session_id)
@@ -179,7 +205,7 @@ class SessionManager:
             traceback.print_exc()
 
     def cleanup_session(self, session_id: str) -> None:
-        """Clean up session resources with improved error handling"""
+        """Clean up session resources with database update"""
         try:
             if session_id in self.research_sessions:
                 session = self.research_sessions[session_id]
@@ -195,7 +221,10 @@ class SessionManager:
                     future.cancel()
                     del self.active_tasks[session_id]
 
-                # Remove session
+                # Update database before removing from memory
+                self.db.update_session_status(session_id, "completed")
+
+                # Remove from memory
                 del self.research_sessions[session_id]
 
                 print(f"Cleaned up session {session_id}")
@@ -204,18 +233,36 @@ class SessionManager:
             print(f"Error cleaning up session: {e}")
             traceback.print_exc()
 
-    def update_session_status(self, session_id: str, status: str) -> None:
-        """Update session status with notification"""
+    def delete_session(self, session_id: str) -> bool:
+        """Delete a session from both memory and database"""
+        try:
+            # Remove from memory if present
+            if session_id in self.research_sessions:
+                self.cleanup_session(session_id)
+            
+            # Remove from database
+            return self.db.delete_session(session_id)
+        except Exception as e:
+            print(f"Error deleting session: {e}")
+            return False
+
+    def update_session_status(self, session_id: str, status: str, result: Optional[str] = None) -> None:
+        """Update session status with database persistence"""
         try:
             if session_id in self.research_sessions:
                 self.research_sessions[session_id]["status"] = status
                 self.research_sessions[session_id]["last_active"] = datetime.now().isoformat()
+                if result:
+                    self.research_sessions[session_id]["result"] = result
+                
+                # Update database
+                self.db.update_session_status(session_id, status, result)
                 
                 # Send status update
                 message_queue = self.websocket_manager.get_message_queue(session_id)
                 message_queue.put({
                     "type": "status",
-                    "data": {"status": status},
+                    "data": {"status": status, "result": result} if result else {"status": status},
                     "timestamp": datetime.now().isoformat()
                 })
                 
@@ -224,12 +271,12 @@ class SessionManager:
             traceback.print_exc()
 
     def get_session_status(self, session_id: str) -> Optional[str]:
-        """Get current session status with validation"""
+        """Get current session status from memory or database"""
         session = self.get_session(session_id)
         return session["status"] if session else None
 
     def get_active_sessions(self) -> Dict[str, Dict]:
-        """Get all active research sessions"""
+        """Get all active research sessions from memory"""
         return {
             session_id: session
             for session_id, session in self.research_sessions.items()
@@ -237,7 +284,7 @@ class SessionManager:
         }
 
     def shutdown(self) -> None:
-        """Shutdown session manager with improved cleanup"""
+        """Shutdown session manager with database cleanup"""
         try:
             # Stop all active sessions
             for session_id in list(self.research_sessions.keys()):

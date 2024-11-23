@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface SearchSettings {
   maxAttempts: number;
@@ -21,7 +21,7 @@ const timeRangeOptions = [
   {
     value: "none",
     label: "Any Time",
-    description: "Search without time restrictions",
+    description: "No time limit on search results",
   },
   {
     value: "d",
@@ -45,7 +45,7 @@ const searchModes = [
   {
     value: "research",
     label: "Research Mode",
-    description: "Comprehensive research with multiple sources and analysis",
+    description: "Comprehensive research with multiple sources",
     features: [
       "Multiple search iterations",
       "Source verification",
@@ -80,50 +80,37 @@ const Toggle: React.FC<ToggleProps> = ({
   label,
   description,
   features,
-}) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-
-  return (
-    <div
-      className="flex items-center justify-between py-4 border-b border-gray-100 relative"
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
-    >
-      <div className="flex-1">
-        <h3 className="text-sm font-medium text-gray-900 flex items-center">
-          {label}
-          <span className="ml-2 text-xs text-gray-500 cursor-help">ⓘ</span>
-        </h3>
-        <p className="text-sm text-gray-500">{description}</p>
-        {features && showTooltip && (
-          <div className="absolute z-10 w-64 p-4 mt-2 bg-white rounded-lg shadow-lg border border-gray-200">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">
-              Features:
-            </h4>
-            <ul className="text-xs text-gray-600 list-disc pl-4 space-y-1">
-              {features.map((feature, index) => (
-                <li key={index}>{feature}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-      <button
-        type="button"
-        className={`${
-          enabled ? "bg-indigo-600" : "bg-gray-200"
-        } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none`}
-        onClick={() => onChange(!enabled)}
-      >
-        <span
-          className={`${
-            enabled ? "translate-x-5" : "translate-x-0"
-          } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
-        />
-      </button>
+}) => (
+  <div className="flex items-center justify-between py-4 border-b border-gray-100 group relative">
+    <div className="flex-1">
+      <h3 className="text-sm font-medium text-gray-900">{label}</h3>
+      <p className="text-sm text-gray-500">{description}</p>
+      {features && (
+        <div className="hidden group-hover:block absolute z-50 left-0 mt-2 w-64 p-4 bg-white rounded-lg shadow-lg border border-gray-200">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">Features:</h4>
+          <ul className="text-xs text-gray-600 list-disc pl-4 space-y-1">
+            {features.map((feature, index) => (
+              <li key={index}>{feature}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
-  );
-};
+    <button
+      type="button"
+      className={`${
+        enabled ? "bg-indigo-600" : "bg-gray-200"
+      } relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none`}
+      onClick={() => onChange(!enabled)}
+    >
+      <span
+        className={`${
+          enabled ? "translate-x-5" : "translate-x-0"
+        } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+      />
+    </button>
+  </div>
+);
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   settings,
@@ -156,7 +143,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         </div>
 
         <div className="space-y-6">
-          {/* Search Mode Section */}
+          {/* Search Mode */}
           <div className="border-b border-gray-200 pb-6">
             <h3 className="text-sm font-medium text-gray-900 mb-4">
               Search Mode
@@ -198,41 +185,40 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             </div>
           </div>
 
-          {/* Time Range Section */}
-          <div className="border-b border-gray-200 pb-6">
-            <h3 className="text-sm font-medium text-gray-900 mb-4">
-              Time Range
-            </h3>
-            <select
-              value={settings.timeRange}
-              onChange={(e) =>
-                updateSetting(
-                  "timeRange",
-                  e.target.value as "none" | "d" | "w" | "m" | "y"
-                )
-              }
-              className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              {timeRangeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <p className="mt-2 text-xs text-gray-500">
-              {
-                timeRangeOptions.find((o) => o.value === settings.timeRange)
-                  ?.description
-              }
-            </p>
-          </div>
-
           {/* Search Parameters */}
           <div className="border-b border-gray-200 pb-6">
             <h3 className="text-sm font-medium text-gray-900 mb-4">
               Search Parameters
             </h3>
             <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Time Range
+                </label>
+                <select
+                  value={settings.timeRange}
+                  onChange={(e) =>
+                    updateSetting(
+                      "timeRange",
+                      e.target.value as "none" | "d" | "w" | "m" | "y"
+                    )
+                  }
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                  {timeRangeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-gray-500">
+                  {
+                    timeRangeOptions.find((o) => o.value === settings.timeRange)
+                      ?.description
+                  }
+                </p>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Max Attempts

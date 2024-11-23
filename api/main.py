@@ -20,7 +20,7 @@ app = FastAPI(title="Research API")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,7 +34,7 @@ session_manager = SessionManager(llm_wrapper, parser, websocket_manager)
 
 # Mount routers with /api prefix
 app.include_router(strategic_router, prefix="/api")
-app.include_router(research_router, prefix="/api/research-management")
+app.include_router(research_router, prefix="/api/research")  # Changed from research-management to research
 
 @app.post("/api/research/start", response_model=ResearchResponse)
 async def start_research(request: ResearchRequest):
