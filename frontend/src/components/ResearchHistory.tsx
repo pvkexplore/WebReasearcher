@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
+import ReactMarkdown from "react-markdown";
 
 interface ResearchSession {
-  session_id: string; // Changed from sessionId to match database
+  session_id: string;
   query: string;
   mode: string;
   status: string;
-  start_time: string; // Changed from startTime to match database
+  start_time: string;
   end_time?: string;
   result?: string;
   settings?: any;
@@ -28,6 +29,7 @@ export const ResearchHistory: React.FC<ResearchHistoryProps> = ({
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
     null
   );
+  const [expandedSession, setExpandedSession] = useState<string | null>(null);
 
   const handleDelete = (session_id: string) => {
     setSelectedSessionId(session_id);
@@ -39,6 +41,7 @@ export const ResearchHistory: React.FC<ResearchHistoryProps> = ({
       onDeleteSession(selectedSessionId);
       setShowConfirmDialog(false);
       setSelectedSessionId(null);
+      setExpandedSession(null);
     }
   };
 
@@ -47,8 +50,8 @@ export const ResearchHistory: React.FC<ResearchHistoryProps> = ({
       console.error("Invalid session ID for restore");
       return;
     }
-    console.log("Restoring session:", session_id);
     onRestoreSession(session_id);
+    setExpandedSession(null);
   };
 
   const getStatusColor = (status: string): string => {
@@ -82,21 +85,28 @@ export const ResearchHistory: React.FC<ResearchHistoryProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
-      <h2 className="text-lg font-medium text-gray-900 mb-4">
-        Research History
-      </h2>
-      <div className="space-y-2">
-        {sessions.map((session) => (
-          <div
-            key={session.session_id}
-            className="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors"
-          >
+    <div className="space-y-2">
+      {sessions.map((session) => (
+        <div
+          key={session.session_id}
+          className="border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          {/* Session Header */}
+          <div className="p-3">
             <div className="flex justify-between items-start">
               <div className="flex-1">
-                <h3 className="text-sm font-medium text-gray-900 truncate">
+                <button
+                  onClick={() =>
+                    setExpandedSession(
+                      expandedSession === session.session_id
+                        ? null
+                        : session.session_id
+                    )
+                  }
+                  className="text-sm font-medium text-gray-900 hover:text-indigo-600 text-left w-full"
+                >
                   {session.query}
-                </h3>
+                </button>
                 <div className="flex items-center space-x-2 text-xs text-gray-500 mt-1">
                   <span>{formatTime(session.start_time)}</span>
                   <span>•</span>
@@ -124,14 +134,33 @@ export const ResearchHistory: React.FC<ResearchHistoryProps> = ({
                 </button>
               </div>
             </div>
-            {session.result && (
-              <div className="mt-2 text-sm text-gray-600">
-                <div className="line-clamp-2">{session.result}</div>
-              </div>
-            )}
           </div>
-        ))}
-      </div>
+
+          {/* Expanded Content */}
+          {expandedSession === session.session_id && session.result && (
+            <div className="border-t border-gray-200 p-3 bg-gray-50">
+              <div className="prose prose-sm max-w-none">
+                <ReactMarkdown>{session.result}</ReactMarkdown>
+              </div>
+              {session.research_details?.knowledge_graph && (
+                <div className="mt-2 pt-2 border-t border-gray-200">
+                  <div className="text-sm font-medium text-gray-700 mb-1">
+                    Entities Found:{" "}
+                    {session.research_details.knowledge_graph.entities.length}
+                  </div>
+                  <div className="text-sm font-medium text-gray-700">
+                    Relationships:{" "}
+                    {
+                      session.research_details.knowledge_graph.relationships
+                        .length
+                    }
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
 
       <ConfirmDialog
         isOpen={showConfirmDialog}

@@ -489,36 +489,61 @@ Answer in clear bullet points. with each bullet not morethan 5 lines.
         while attempt < self.max_attempts and not self.stop_requested:
             try:
                 self.message_handler.send_progress_update(
-                    "searching",
-                    f"Search attempt {attempt + 1}",
-                    outcome=f"Starting attempt {attempt + 1} of {self.max_attempts}"
+                    "search_start",
+                    f"Starting search attempt {attempt + 1} of {self.max_attempts}",
+                    outcome=f"Initializing attempt {attempt + 1}"
                 )
 
                 # Formulate query
+                self.message_handler.send_progress_update(
+                    "query_formulation",
+                    f"Formulating search query for attempt {attempt + 1}",
+                    outcome="Analyzing query requirements"
+                )
                 search_query, time_range = self.formulate_query(query, attempt)
                 if not search_query:
                     attempt += 1
                     continue
 
                 # Perform search
+                self.message_handler.send_progress_update(
+                    "web_search",
+                    f"Executing web search with query: {search_query}",
+                    outcome="Retrieving search results"
+                )
                 results = self.perform_search(search_query, time_range)
                 if not results:
                     attempt += 1
                     continue
 
                 # Select pages
+                self.message_handler.send_progress_update(
+                    "page_selection",
+                    "Analyzing search results for relevance",
+                    outcome="Selecting most relevant pages"
+                )
                 selected_urls = self.select_relevant_pages(results, query)
                 if not selected_urls:
                     attempt += 1
                     continue
 
                 # Scrape content
+                self.message_handler.send_progress_update(
+                    "content_scraping",
+                    "Retrieving content from selected sources",
+                    outcome="Extracting detailed information"
+                )
                 scraped_content = self.scrape_content(selected_urls)
                 if not scraped_content:
                     attempt += 1
                     continue
 
                 # Calculate current content confidence
+                self.message_handler.send_progress_update(
+                    "content_analysis",
+                    "Analyzing content quality and relevance",
+                    outcome="Evaluating information quality"
+                )
                 current_confidence = self._calculate_content_confidence(scraped_content)
                 
                 # Update best content if this attempt is better
@@ -527,10 +552,20 @@ Answer in clear bullet points. with each bullet not morethan 5 lines.
                     best_confidence = current_confidence
 
                 # Evaluate content
+                self.message_handler.send_progress_update(
+                    "content_evaluation",
+                    "Evaluating content completeness",
+                    outcome="Determining if more research is needed"
+                )
                 evaluation, decision = self.evaluate_content(query, scraped_content)
                 
                 if decision == "answer" or attempt == self.max_attempts - 1:
-                    # Use best content found so far
+                    # Generate answer
+                    self.message_handler.send_progress_update(
+                        "answer_generation",
+                        "Synthesizing final answer",
+                        outcome="Compiling research findings"
+                    )
                     answer = self.generate_answer(query, best_content)
                     
                     # Send final result

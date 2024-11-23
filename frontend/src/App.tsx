@@ -224,32 +224,42 @@ function App() {
       return;
     }
 
-    const ws = new WebSocket(`${config.server.wsUrl}/ws/${session_id}`);
-    wsRef.current = ws;
-    ws.onopen = () => {
-      console.log("WebSocket connected");
-      setIsConnected(true);
-      setError(null);
-      reconnectAttempts.current = 0;
-    };
+    try {
+      // Construct WebSocket URL with /ws path
+      const wsUrl = `${config.server.wsUrl}/ws/${session_id}`;
+      console.log("Connecting to WebSocket:", wsUrl);
 
-    ws.onclose = (event) => {
-      console.log("WebSocket closed:", event);
-      setIsConnected(false);
-      wsRef.current = null;
+      const ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
 
-      // Attempt reconnection if session is active
-      if (session?.status === "running" || session?.status === "starting") {
-        handleReconnect(session_id);
-      }
-    };
+      ws.onopen = () => {
+        console.log("WebSocket connected");
+        setIsConnected(true);
+        setError(null);
+        reconnectAttempts.current = 0;
+      };
 
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-      setError("WebSocket connection error");
-    };
+      ws.onclose = (event) => {
+        console.log("WebSocket closed:", event);
+        setIsConnected(false);
+        wsRef.current = null;
 
-    ws.onmessage = handleWebSocketMessage;
+        // Attempt reconnection if session is active
+        if (session?.status === "running" || session?.status === "starting") {
+          handleReconnect(session_id);
+        }
+      };
+
+      ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        setError("WebSocket connection error");
+      };
+
+      ws.onmessage = handleWebSocketMessage;
+    } catch (error) {
+      console.error("Error setting up WebSocket:", error);
+      setError("Failed to establish WebSocket connection");
+    }
   };
 
   // Add cleanup function
@@ -522,104 +532,112 @@ function App() {
   }, [session?.status]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div
-        className={`max-w-7xl mx-auto px-4 py-6 ${
-          showSettings ? "mr-80" : ""
-        } transition-all duration-200`}
-      >
-        <ResearchHeader
-          status={session?.status || null}
-          showSettings={showSettings}
-          onToggleSettings={() => setShowSettings(!showSettings)}
-        />
-
-        {showSettings && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
-            onClick={() => setShowSettings(false)}
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <div className="w-80 flex-shrink-0 border-r border-gray-200 bg-white overflow-y-auto h-screen">
+        <div className="p-4">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">
+            Research History
+          </h2>
+          <ResearchHistory
+            sessions={researchSessions}
+            onDeleteSession={handleDeleteSession}
+            onRestoreSession={handleRestoreSession}
           />
-        )}
+        </div>
+      </div>
 
-        <SearchBar
-          query={query}
-          onQueryChange={setQuery}
-          onSubmit={(e) => {
-            e.preventDefault();
-            startResearch();
-          }}
-          onStop={stopResearch}
-          isStartDisabled={
-            !query.trim() || (session?.status === "running" && isConnected)
-          }
-          showStopButton={!!(session && isConnected)}
-        />
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <ResearchHeader
+            status={session?.status || null}
+            showSettings={showSettings}
+            onToggleSettings={() => setShowSettings(!showSettings)}
+          />
 
-        <ErrorMessage message={error} />
+          {showSettings && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              onClick={() => setShowSettings(false)}
+            />
+          )}
 
-        <ResearchHistory
-          sessions={researchSessions}
-          onDeleteSession={handleDeleteSession}
-          onRestoreSession={handleRestoreSession}
-        />
-
-        {session && (
-          <ResearchDashboard
-            currentFocus={currentFocus}
-            sourcesAnalyzed={sourcesAnalyzed}
-            documentContent={documentContent}
-            sources={sources}
-            stage={currentStage}
-            researchDetails={researchDetails}
-            confidenceScore={confidenceScore}
-            focusAreas={focusAreas}
-            status={session.status}
-            startTime={session.start_time}
-            isAssessing={isAssessing}
-            assessmentResult={assessmentResult}
-            hasResult={hasResult}
-            onPause={handlePause}
-            onResume={handleResume}
-            onAssess={handleAssess}
-            messages={messages}
-            result={
-              hasResult
-                ? {
-                    summary:
-                      messages.find((m) => m.type === "result")?.message || "",
-                    keyFindings: messages
-                      .filter((m) => m.type === "finding")
-                      .map((m) => m.message),
-                    sources:
-                      researchDetails?.successful_urls.map((url: string) => ({
-                        url,
-                        title: new URL(url).hostname,
-                        reliability: 100,
-                        content:
-                          researchDetails?.content_summaries.find(
-                            (s: { url: string }) => s.url === url
-                          )?.summary || "",
-                      })) || [],
-                    analysisSteps: messages
-                      .filter((m) => m.type === "progress")
-                      .map((m) => ({
-                        stage: m.data?.stage || "Unknown",
-                        description: m.message,
-                        outcome: m.data?.outcome || "",
-                      })),
-                  }
-                : undefined
+          <SearchBar
+            query={query}
+            onQueryChange={setQuery}
+            onSubmit={(e) => {
+              e.preventDefault();
+              startResearch();
+            }}
+            onStop={stopResearch}
+            isStartDisabled={
+              !query.trim() || (session?.status === "running" && isConnected)
             }
+            showStopButton={!!(session && isConnected)}
           />
-        )}
 
-        {showSettings && (
-          <SettingsPanel
-            settings={settings}
-            onSettingsChange={setSettings}
-            onReset={() => setSettings(defaultSettings)}
-          />
-        )}
+          <ErrorMessage message={error} />
+
+          {session && (
+            <ResearchDashboard
+              currentFocus={currentFocus}
+              sourcesAnalyzed={sourcesAnalyzed}
+              documentContent={documentContent}
+              sources={sources}
+              stage={currentStage}
+              researchDetails={researchDetails}
+              confidenceScore={confidenceScore}
+              focusAreas={focusAreas}
+              status={session.status}
+              startTime={session.start_time}
+              isAssessing={isAssessing}
+              assessmentResult={assessmentResult}
+              hasResult={hasResult}
+              onPause={handlePause}
+              onResume={handleResume}
+              onAssess={handleAssess}
+              messages={messages}
+              result={
+                hasResult
+                  ? {
+                      summary:
+                        messages.find((m) => m.type === "result")?.message ||
+                        "",
+                      keyFindings: messages
+                        .filter((m) => m.type === "finding")
+                        .map((m) => m.message),
+                      sources:
+                        researchDetails?.successful_urls.map((url: string) => ({
+                          url,
+                          title: new URL(url).hostname,
+                          reliability: 100,
+                          content:
+                            researchDetails?.content_summaries.find(
+                              (s: { url: string }) => s.url === url
+                            )?.summary || "",
+                        })) || [],
+                      analysisSteps: messages
+                        .filter((m) => m.type === "progress")
+                        .map((m) => ({
+                          stage: m.data?.stage || "Unknown",
+                          description: m.message,
+                          outcome: m.data?.outcome || "",
+                        })),
+                    }
+                  : undefined
+              }
+            />
+          )}
+
+          {showSettings && (
+            <SettingsPanel
+              settings={settings}
+              onSettingsChange={setSettings}
+              onReset={() => setSettings(defaultSettings)}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

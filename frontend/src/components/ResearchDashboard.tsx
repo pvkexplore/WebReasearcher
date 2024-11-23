@@ -6,6 +6,9 @@ import {
   ScrapedContent,
 } from "../types";
 
+import ReactMarkdown from "react-markdown";
+import KnowledgeGraph from "./KnowledgeGraph"; // Fixed import
+
 export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
   currentFocus,
   sourcesAnalyzed,
@@ -21,13 +24,48 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
   assessmentResult,
   hasResult,
   result,
+  onPause,
+  onResume,
+  onAssess,
+  messages,
 }) => {
+  // Helper function to get stage display name
+  const getStageDisplayName = (stage: string): string => {
+    const stageMap: { [key: string]: string } = {
+      search_start: "Starting Search",
+      query_formulation: "Formulating Query",
+      web_search: "Searching Web",
+      page_selection: "Selecting Pages",
+      content_scraping: "Extracting Content",
+      content_analysis: "Analyzing Content",
+      content_evaluation: "Evaluating Results",
+      answer_generation: "Generating Answer",
+    };
+    return stageMap[stage] || stage;
+  };
+
+  // Helper function to get stage description
+  const getStageDescription = (stage: string): string => {
+    const descriptionMap: { [key: string]: string } = {
+      search_start: "Initializing search process",
+      query_formulation: "Creating optimized search query",
+      web_search: "Searching for relevant information",
+      page_selection: "Identifying most relevant sources",
+      content_scraping: "Retrieving content from selected sources",
+      content_analysis: "Analyzing content quality and relevance",
+      content_evaluation: "Evaluating information completeness",
+      answer_generation: "Synthesizing final answer",
+    };
+    return descriptionMap[stage] || stage;
+  };
+
+  // ... (rest of the code remains the same until Research Trail section)
   const [activeTab, setActiveTab] = useState<"progress" | "results">(
     hasResult ? "results" : "progress"
   );
 
   const [resultTab, setResultTab] = useState<
-    "summary" | "analysis" | "sources" | "details"
+    "summary" | "analysis" | "sources" | "details" | "knowledge"
   >("summary");
 
   const researchTrailRef = useRef<HTMLDivElement>(null);
@@ -142,7 +180,9 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
                   <div className="animate-pulse h-2 w-2 rounded-full bg-blue-500 mr-2" />
                 )}
                 <p className="text-base font-semibold text-blue-900">
-                  {hasResult ? "Completed" : stage || "Initializing"}
+                  {hasResult
+                    ? "Completed"
+                    : getStageDisplayName(stage || "Initializing")}
                 </p>
               </div>
             </div>
@@ -186,7 +226,7 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
           {researchDetails?.analysis_steps && (
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <h3 className="text-sm font-medium text-gray-800 mb-4">
-                Research Trail
+                Research Progress
               </h3>
               <div
                 ref={researchTrailRef}
@@ -195,9 +235,14 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
                 {researchDetails.analysis_steps.map((step, index) => (
                   <div key={index} className="border-l-2 border-blue-500 pl-4">
                     <div className="flex justify-between items-start">
-                      <h4 className="text-sm font-medium text-gray-900">
-                        {step.stage}
-                      </h4>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-900">
+                          {getStageDisplayName(step.stage)}
+                        </h4>
+                        <p className="text-xs text-gray-500">
+                          {getStageDescription(step.stage)}
+                        </p>
+                      </div>
                       <span className="text-sm text-gray-500">
                         {new Date(step.timestamp).toLocaleTimeString()}
                       </span>
@@ -266,21 +311,27 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
         <div className="space-y-6">
           {/* Results Navigation */}
           <div className="flex space-x-4 border-b border-gray-200">
-            {(["summary", "analysis", "sources", "details"] as const).map(
-              (tab) => (
-                <button
-                  key={tab}
-                  className={`px-4 py-2 text-sm font-medium ${
-                    resultTab === tab
-                      ? "border-b-2 border-indigo-500 text-indigo-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                  onClick={() => setResultTab(tab)}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              )
-            )}
+            {(
+              [
+                "summary",
+                "analysis",
+                "sources",
+                "details",
+                "knowledge",
+              ] as const
+            ).map((tab) => (
+              <button
+                key={tab}
+                className={`px-4 py-2 text-sm font-medium ${
+                  resultTab === tab
+                    ? "border-b-2 border-indigo-500 text-indigo-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+                onClick={() => setResultTab(tab)}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
           </div>
 
           {/* Summary Tab */}
@@ -288,7 +339,7 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
             <div className="space-y-6">
               <div className="prose max-w-none">
                 <h3 className="text-lg font-medium mb-4">Research Summary</h3>
-                <p className="text-base text-gray-600">{result.summary}</p>
+                <ReactMarkdown>{result.summary}</ReactMarkdown>
               </div>
               <div>
                 <h4 className="text-lg font-medium mb-4">Key Findings</h4>
@@ -299,11 +350,20 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
                   ).map((finding, index) => (
                     <li key={index} className="flex items-start">
                       <span className="text-base text-green-500 mr-2">✓</span>
-                      <span className="text-base text-gray-600">{finding}</span>
+                      <ReactMarkdown className="text-base text-gray-600">
+                        {finding}
+                      </ReactMarkdown>
                     </li>
                   ))}
                 </ul>
               </div>
+            </div>
+          )}
+
+          {/* Knowledge Graph Tab */}
+          {resultTab === "knowledge" && researchDetails?.knowledge_graph && (
+            <div className="h-[600px] w-full bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+              <KnowledgeGraph data={researchDetails.knowledge_graph} />
             </div>
           )}
 
@@ -320,13 +380,13 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
                       {new Date(step.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
-                  <p className="mt-2 text-base text-gray-600">
+                  <ReactMarkdown className="mt-2 text-base text-gray-600">
                     {step.description}
-                  </p>
+                  </ReactMarkdown>
                   {step.outcome && (
-                    <p className="mt-2 text-base text-indigo-600">
+                    <ReactMarkdown className="mt-2 text-base text-indigo-600">
                       {step.outcome}
-                    </p>
+                    </ReactMarkdown>
                   )}
                 </div>
               ))}
@@ -353,9 +413,9 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
                         Reliability: {metrics?.reliability || "N/A"}%
                       </span>
                     </div>
-                    <p className="mt-3 text-base text-gray-600">
+                    <ReactMarkdown className="mt-3 text-base text-gray-600">
                       {source.content}
-                    </p>
+                    </ReactMarkdown>
                     {metrics && (
                       <div className="mt-2 text-sm text-gray-500">
                         <span>Length: {metrics.content_length} chars</span>
@@ -401,17 +461,17 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
                               <h5 className="text-sm font-medium text-blue-800 mb-1">
                                 Prompt:
                               </h5>
-                              <pre className="text-sm text-blue-700 whitespace-pre-wrap">
+                              <ReactMarkdown className="text-sm text-blue-700 whitespace-pre-wrap">
                                 {interaction.prompt}
-                              </pre>
+                              </ReactMarkdown>
                             </div>
                             <div className="bg-green-50 p-3 rounded-md">
                               <h5 className="text-sm font-medium text-green-800 mb-1">
                                 Response:
                               </h5>
-                              <pre className="text-sm text-green-700 whitespace-pre-wrap">
+                              <ReactMarkdown className="text-sm text-green-700 whitespace-pre-wrap">
                                 {interaction.response}
-                              </pre>
+                              </ReactMarkdown>
                             </div>
                           </div>
                         </div>
@@ -547,32 +607,35 @@ export const ResearchDashboard: React.FC<ResearchDashboardProps> = ({
               {/* Research Document */}
               <div className="prose max-w-none">
                 <h3 className="text-lg font-medium mb-4">Research Document</h3>
-                <pre className="text-base text-gray-600 whitespace-pre-wrap bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <ReactMarkdown className="text-base text-gray-600 whitespace-pre-wrap bg-gray-50 rounded-lg p-4 border border-gray-200">
                   {documentContent || result.summary}
-                </pre>
+                </ReactMarkdown>
               </div>
             </div>
           )}
         </div>
       )}
 
+      {/* Progress View remains the same */}
+      {/* ... */}
+
       <style>
         {`
-          .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 3px;
-          }
-          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #666;
-          }
-        `}
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #666;
+      }
+    `}
       </style>
     </div>
   );

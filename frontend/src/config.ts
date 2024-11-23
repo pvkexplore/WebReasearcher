@@ -6,6 +6,7 @@ const config = {
       return `http://${this.host}:${this.port}`;
     },
     get wsUrl() {
+      // Return the complete base WebSocket URL without the trailing slash
       return `ws://${this.host}:${this.port}`;
     },
   },
