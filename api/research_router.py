@@ -33,7 +33,6 @@ async def get_active_session(
         raise HTTPException(status_code=404, detail="Research session not found")
     return session
 
-# Add start endpoint
 @router.post("/start")
 async def start_research(
     request: ResearchRequest,
@@ -60,7 +59,6 @@ async def start_research(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# New endpoints for session history
 @router.get("/sessions", response_model=List[ResearchSession])
 async def get_research_sessions(
     managers: tuple[SessionManager, WebSocketManager] = Depends(get_managers)
@@ -129,7 +127,6 @@ async def restore_research_session(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Existing endpoints
 @router.get("/{session_id}/progress", response_model=ResearchProgress)
 async def get_research_progress(
     session_id: str,

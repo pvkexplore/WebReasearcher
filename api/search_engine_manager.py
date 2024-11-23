@@ -1,21 +1,22 @@
-from typing import Dict, Optional, List, Any
+from typing import Dict, Optional, List, Any, Tuple
 from datetime import datetime
 from queue import Queue
 import json
 import logging
+import re
+from duckduckgo_search import DDGS
 from llm_wrapper import LLMWrapper
 from llm_response_parser import UltimateLLMResponseParser
-from Self_Improving_Search import EnhancedSelfImprovingSearch, SearchMessage
-from .models import WebSocketMessage
+from web_scraper import get_web_content, can_fetch
 
 # Configure logger
 logger = logging.getLogger(__name__)
 
 class WebSocketMessageHandler:
-    """Handles message routing to WebSocket queues"""
-    def __init__(self, session_id: str, message_queues: Dict[str, Queue]):
+    def __init__(self, session_id: str, message_queues: Dict[str, Queue], llm: Optional[LLMWrapper] = None):
         self.session_id = session_id
         self.message_queues = message_queues
+        self.llm = llm  # Store LLM instance
         self.sources_analyzed = 0
         self.current_focus = None
         self.research_details = {
@@ -25,9 +26,9 @@ class WebSocketMessageHandler:
             "content_summaries": [],
             "analysis_steps": [],
             "source_metrics": {},
-            "llm_interactions": [],  # Store LLM's thinking process
-            "scraped_content": {},   # Store full content
-            "knowledge_graph": {     # Store entity relationships
+            "llm_interactions": [],
+            "scraped_content": {},
+            "knowledge_graph": {
                 "entities": [],
                 "relationships": []
             }
@@ -51,33 +52,74 @@ class WebSocketMessageHandler:
 
     def extract_entities(self, content: str) -> List[Dict]:
         """Extract entities and their types from content"""
+        if not self.llm:
+            logger.error("LLM not available for entity extraction")
+            return {"entities": [], "relationships": []}
+
         prompt = f"""
-        Extract key entities from the following content. Identify their types and relationships.
+        Extract key entities and their relationships from this content. Focus on creating a meaningful knowledge graph.
 
         Content:
         {content}
 
         Instructions:
-        1. Identify important entities (people, organizations, concepts, etc.)
-        2. Determine entity types
-        3. Identify relationships between entities
-        4. Focus on significant connections
+        1. Entity Identification:
+           - People (experts, authors, historical figures)
+           - Organizations (companies, institutions, groups)
+           - Concepts (theories, methods, technologies)
+           - Places (locations, regions, facilities)
+           - Events (occurrences, developments, milestones)
+           - Products (tools, systems, applications)
+
+        2. Entity Properties:
+           - Type: Specific category (person, org, concept, etc.)
+           - Description: Key characteristics or relevance
+           - Role: Function or significance in the context
+
+        3. Relationship Types:
+           - Hierarchical (part-of, belongs-to)
+           - Temporal (precedes, follows)
+           - Causal (causes, affects)
+           - Associative (related-to, similar-to)
+           - Action (performs, creates)
+           - Dependency (requires, depends-on)
+
+        4. Focus on:
+           - Main entities central to the topic
+           - Important connections between entities
+           - Clear, descriptive relationship types
+           - Contextually relevant information
 
         Format your response as JSON:
         {{
           "entities": [
-            {{"name": "entity_name", "type": "entity_type", "description": "brief_description"}},
+            {{
+              "name": "entity_name",
+              "type": "entity_type",
+              "description": "brief_description"
+            }},
             ...
           ],
           "relationships": [
-            {{"source": "entity1", "target": "entity2", "type": "relationship_type"}},
+            {{
+              "source": "source_entity_name",
+              "target": "target_entity_name",
+              "type": "relationship_type"
+            }},
             ...
           ]
         }}
+
+        Ensure:
+        - Entity names are consistent when referenced
+        - Relationships connect existing entities
+        - Descriptions are concise but informative
+        - Types are specific and accurate
         """
 
         try:
             response = self.llm.generate(prompt, max_tokens=1000)
+            self.add_llm_interaction(prompt, response, "entity_extraction")
             data = json.loads(response)
             return data
         except Exception as e:
@@ -134,331 +176,421 @@ class WebSocketMessageHandler:
             "timestamp": datetime.now().isoformat()
         })
 
-    def handle_message(self, message: SearchMessage) -> None:
-        """Route search messages to WebSocket queue with enhanced progress tracking"""
-        if self.session_id not in self.message_queues:
-            print(f"No message queue found for session {self.session_id}")
-            return
-
-        queue = self.message_queues[self.session_id]
-        
-        # Track progress based on message content
-        if "Scraping selected pages" in message.message:
-            self.send_progress_update("scraping", message.message)
-        elif "Successfully scraped:" in message.message:
-            url = message.message.replace("Successfully scraped:", "").strip()
-            self.sources_analyzed += 1
-            self.research_details["urls_accessed"].add(url)
-            self.research_details["successful_urls"].add(url)
-            
-            # Calculate source reliability based on content quality
-            content = message.data.get("content", "") if message.data else ""
-            content_length = len(content)
-            has_citations = "http" in content.lower() or "www." in content.lower()
-            well_formatted = content.count('\n') > 5  # Basic structure check
-            
-            # Simple reliability score (can be enhanced)
-            reliability = min(100, (
-                50 +  # Base score
-                (20 if content_length > 1000 else 10) +  # Length bonus
-                (20 if has_citations else 0) +  # Citations bonus
-                (10 if well_formatted else 0)  # Format bonus
-            ))
-
-            self.research_details["source_metrics"][url] = {
-                "reliability": reliability,
-                "content_length": content_length,
-                "scrape_time": datetime.now().isoformat()
-            }
-
-            if message.data and "content" in message.data:
-                self.research_details["content_summaries"].append({
-                    "url": url,
-                    "summary": message.data["content"][:200] + "...",
-                    "reliability": reliability
-                })
-            
-            self.send_progress_update(
-                "analyzing",
-                message.message,
-                outcome=f"Successfully retrieved and analyzed content from {url} (Reliability: {reliability}%)"
-            )
-
-        elif "Failed to scrape:" in message.message or "Robots.txt disallows scraping of" in message.message:
-            url = message.message.split()[-1].strip()
-            self.research_details["urls_accessed"].add(url)
-            self.research_details["failed_urls"].add(url)
-            self.send_progress_update(
-                "scraping",
-                "Continuing with available sources...",
-                outcome=f"Failed to retrieve content from {url}"
-            )
-
-        elif "Search attempt" in message.message:
-            self.send_progress_update(
-                "searching",
-                message.message,
-                outcome="Initiated new search iteration"
-            )
-
-        elif "Formulated query:" in message.message:
-            query = message.message.replace("Formulated query:", "").strip()
-            self.current_focus = {
-                "area": query,
-                "priority": 1
-            }
-            self.send_progress_update(
-                "querying",
-                message.message,
-                outcome=f"Generated search query: {query}"
-            )
-
-        elif "Thinking" in message.message:
-            self.send_progress_update(
-                "thinking",
-                message.message,
-                outcome="Processing gathered information"
-            )
-
-        elif "Evaluating content" in message.message:
-            self.send_progress_update(
-                "evaluating",
-                message.message,
-                outcome="Assessing information quality and relevance"
-            )
-
-        else:
-            # Pass through other messages with current progress state
-            queue.put({
-                "type": message.type,
-                "message": message.message,
-                "data": {
-                    "current_focus": self.current_focus,
-                    "sources_analyzed": self.sources_analyzed,
-                    "research_details": {
-                        "urls_accessed": list(self.research_details["urls_accessed"]),
-                        "successful_urls": list(self.research_details["successful_urls"]),
-                        "failed_urls": list(self.research_details["failed_urls"]),
-                        "content_summaries": self.research_details["content_summaries"],
-                        "analysis_steps": self.research_details["analysis_steps"],
-                        "source_metrics": self.research_details["source_metrics"],
-                        "llm_interactions": self.research_details["llm_interactions"],
-                        "scraped_content": self.research_details["scraped_content"],
-                        "knowledge_graph": self.research_details["knowledge_graph"]
-                    },
-                    **(message.data or {})
-                },
-                "timestamp": message.timestamp
-            })
-
-class AsyncSearchEngine(EnhancedSelfImprovingSearch):
-    """Extends EnhancedSelfImprovingSearch with WebSocket integration"""
-    def __init__(
-        self,
-        llm: LLMWrapper,
-        parser: UltimateLLMResponseParser,
-        session_id: str,
-        message_queues: Dict[str, Queue],
-        message_processing_tasks: Dict[str, bool],
-        settings: Dict[str, Any]
-    ):
-        # Initialize message handler for WebSocket communication
-        self.message_handler = WebSocketMessageHandler(session_id, message_queues)
-        
-        # Initialize parent class with message handler
-        super().__init__(llm, parser, message_handler=self.message_handler)
-        
-        # Store additional attributes
+class AsyncSearchEngine:
+    def __init__(self, llm: LLMWrapper, parser: UltimateLLMResponseParser, session_id: str,
+                 message_queues: Dict[str, Queue], message_processing_tasks: Dict[str, bool],
+                 settings: Dict[str, Any]):
+        self.llm = llm
+        self.parser = parser
         self.session_id = session_id
         self.message_queues = message_queues
         self.message_processing_tasks = message_processing_tasks
         self.settings = settings
-        self.research_paused = False
+        # Pass LLM to message handler
+        self.message_handler = WebSocketMessageHandler(session_id, message_queues, llm)
         self.stop_requested = False
+        self.max_attempts = settings.get('maxAttempts', 5)
+        self.current_focus = None
+        self.searched_urls = set()
 
-    def extract_key_findings(self, content: str) -> List[str]:
-        """Extract key findings with improved analysis"""
+    def formulate_query(self, user_query: str, attempt: int) -> Tuple[str, str]:
+        """Generate an effective search query with attempt-based refinement"""
         prompt = f"""
-        Analyze the following research content and extract key findings. Focus on the most important discoveries, facts, or conclusions.
+You are creating a search query for a search engine to answer the following user question :
+"{user_query[:200]}"
 
-        Content:
-        {content}
+Your task:
+1. Create a search query of upto 10 words that will yield relevant results.
+2. This is your search attempt #{attempt + 1}. Try your approach based on attempt number:
+   - Attempt 1: Use primary keywords
+   - Attempt 2: Include synonyms or related terms
+   - Attempt 3: Focus on specific aspects
+   - Attempt 4: Consider alternative phrasings
+   - Attempt 5: Broaden the scope
+3. Determine if a specific time range is needed.
+Time range options:
+- 'd': Past day (for very recent events)
+- 'w': Past week (for recent developments)
+- 'm': Past month (for ongoing topics)
+- 'y': Past year (for annual context)
+- 'none': No time limit (for general knowledge)
 
-        Instructions:
-        1. Identify 3-5 main findings or conclusions
-        2. Each finding should be a complete, standalone statement
-        3. Focus on factual information and significant insights
-        4. Avoid repetition and general statements
-        5. Do not include phrases like "the research shows" or "according to"
-        6. Prioritize specific, concrete information over general statements
-        7. Include quantitative data when available
-        8. Highlight unique or unexpected discoveries
+Response format:
+Search query: [upto 10 word query]
+Time range: [d/w/m/y/none]
+"""
+        # Record LLM interaction
+        response = self.llm.generate(prompt, max_tokens=50)
+        self.message_handler.add_llm_interaction(prompt, response, "query_formulation")
 
-        Format your response as a list of findings, one per line, starting with a dash (-).
-        For each finding, include a confidence score (0-100) in parentheses.
-        """
+        # Parse response
+        query = ""
+        time_range = "none"
+        for line in response.strip().split('\n'):
+            if ":" in line:
+                key, value = line.split(":", 1)
+                key = key.strip().lower()
+                value = value.strip()
+                if "query" in key:
+                    query = self._clean_query(value)
+                elif "time" in key or "range" in key:
+                    time_range = self._validate_time_range(value)
 
-        try:
-            response = self.llm.generate(prompt, max_tokens=500)
-            findings = []
-            for line in response.split('\n'):
-                if line.strip().startswith('-'):
-                    # Extract finding and confidence score
-                    finding = line.strip('- ').strip()
-                    confidence = 100  # Default confidence
-                    if '(' in finding and finding.endswith(')'):
-                        try:
-                            confidence = int(finding.split('(')[-1].strip(')'))
-                            finding = finding.split('(')[0].strip()
-                        except ValueError:
-                            pass
-                    findings.append({
-                        "finding": finding,
-                        "confidence": confidence
-                    })
-            return findings[:5]  # Return up to 5 findings
-        except Exception as e:
-            logger.error(f"Error extracting key findings: {str(e)}")
+        if not query:
+            query = " ".join(user_query.split()[:5])
+
+        # Update current focus for API compatibility
+        self.current_focus = {
+            "area": query,
+            "priority": 1
+        }
+        self.message_handler.current_focus = self.current_focus
+
+        return query, time_range
+
+    def _clean_query(self, query: str) -> str:
+        """Clean and normalize search query"""
+        query = re.sub(r'["\'\[\]]', '', query)
+        query = re.sub(r'\s+', ' ', query)
+        return query.strip()[:100]
+
+    def _validate_time_range(self, time_range: str) -> str:
+        """Validate time range value"""
+        valid_ranges = ['d', 'w', 'm', 'y', 'none']
+        time_range = time_range.lower()
+        return time_range if time_range in valid_ranges else 'none'
+
+    def perform_search(self, query: str, time_range: str) -> List[Dict]:
+        """Execute search query"""
+        if not query:
             return []
 
-    def update_current_focus(self, focus: str, priority: int = 1) -> None:
-        """Update the current research focus"""
-        self.message_handler.current_focus = {
-            "area": focus,
-            "priority": priority
-        }
-        self.message_handler.send_progress_update(
-            "focusing",
-            f"Current focus: {focus}",
-            outcome=f"Investigating area with priority {priority}"
-        )
+        with DDGS() as ddgs:
+            try:
+                if time_range and time_range != 'none':
+                    results = list(ddgs.text(query, timelimit=time_range, max_results=10))
+                else:
+                    results = list(ddgs.text(query, max_results=10))
+                return [{'number': i+1, **result} for i, result in enumerate(results)]
+            except Exception as e:
+                logger.error(f"Search error: {str(e)}")
+                return []
 
-    def perform_single_search(self, query: str) -> Optional[str]:
-        """Perform a single search with progress updates"""
-        try:
-            message_queue = self.message_queues.get(self.session_id)
-            if not message_queue:
-                return None
+    def select_relevant_pages(self, search_results: List[Dict], user_query: str) -> List[str]:
+        """Select most relevant pages to analyze"""
+        prompt = f"""
+        Given User question : "{user_query[:200]}"
+        Given list of Web search results: {list(self.searched_urls)}
 
-            # Update status for query formulation
-            self.message_handler.send_progress_update(
-                "formulating",
-                "Formulating search query...",
-                {"query": query}
+Instructions:
+1. Select exactly 2 results that:
+   - Are most relevant to the query
+   - Come from reliable sources
+2. Prioritize:
+   - Official documentation/sources
+   - Recent information if topic is time-sensitive
+   - Comprehensive overviews
+   - Primary sources over secondary ones
+
+Respond in the Format:
+Selected Results: [Two numbers]
+Reasoning: [Your reasoning]
+"""
+        # Record LLM interaction
+        response = self.llm.generate(prompt, max_tokens=200)
+        self.message_handler.add_llm_interaction(prompt, response, "page_selection")
+
+        # Parse response
+        selected_nums = []
+        for line in response.strip().split('\n'):
+            if line.startswith('Selected Results:'):
+                selected_nums = [int(num.strip()) for num in re.findall(r'\d+', line)]
+                break
+
+        if len(selected_nums) == 2:
+            selected_urls = [result['href'] for result in search_results 
+                           if result['number'] in selected_nums]
+            return [url for url in selected_urls if can_fetch(url)]
+
+        # Fallback to top results
+        return [result['href'] for result in search_results[:2] 
+                if can_fetch(result['href'])]
+
+    def _format_results(self, results: List[Dict]) -> str:
+        """Format search results for LLM"""
+        formatted = []
+        for result in results:
+            formatted.append(
+                f"{result['number']}. Title: {result.get('title', 'N/A')}\n"
+                f"   Snippet: {result.get('body', 'N/A')[:200]}...\n"
+                f"   URL: {result.get('href', 'N/A')}\n"
             )
+        return "\n".join(formatted)
 
-            # Use parent class's methods for actual search
-            formulated_query, time_range = self.formulate_query(query, 0)
-            self.update_current_focus(formulated_query)
-            
-            # Update status for search
-            self.message_handler.send_progress_update(
-                "searching",
-                f"Searching with query: {formulated_query}",
-                {"query": formulated_query}
-            )
+    def scrape_content(self, urls: List[str]) -> Dict[str, str]:
+        """Scrape and process content from URLs"""
+        scraped_content = {}
+        for url in urls:
+            if can_fetch(url):
+                content = get_web_content([url])
+                if content:
+                    scraped_content.update(content)
+                    
+                    # Store content and update knowledge graph
+                    for page_url, page_content in content.items():
+                        self.message_handler.add_scraped_content(page_url, page_content)
+                        
+                        # Update knowledge graph for research mode
+                        if self.settings.get("searchMode") == "research":
+                            self.message_handler.update_knowledge_graph(page_content)
+                    
+                    # Update metrics
+                    content_length = len(content[url])
+                    has_citations = "http" in content[url].lower()
+                    well_formatted = content[url].count('\n') > 5
+                    
+                    reliability = min(100, (
+                        50 +  # Base score
+                        (20 if content_length > 1000 else 10) +  # Length bonus
+                        (20 if has_citations else 0) +  # Citations bonus
+                        (10 if well_formatted else 0)  # Format bonus
+                    ))
+                    
+                    self.message_handler.research_details["source_metrics"][url] = {
+                        "reliability": reliability,
+                        "content_length": content_length,
+                        "scrape_time": datetime.now().isoformat()
+                    }
+                    
+                    self.message_handler.research_details["urls_accessed"].add(url)
+                    self.message_handler.research_details["successful_urls"].add(url)
+                    self.message_handler.sources_analyzed += 1
+                    self.searched_urls.add(url)
 
-            if self.stop_requested:
-                return None
+        return scraped_content
 
-            results = self.perform_search(formulated_query, time_range)
-            if not results:
-                message_queue.put({
-                    "type": "result",
-                    "message": "No results found.",
-                    "data": {
-                        "result": "No results found.",
-                        "research_details": self.message_handler.research_details
-                    },
-                    "timestamp": datetime.now().isoformat()
-                })
-                return "No results found."
+    def evaluate_content(self, user_query: str, scraped_content: Dict[str, str]) -> Tuple[str, str]:
+        """Evaluate if content is sufficient with refinement guidance"""
+        # Remove knowledge graph update from here since it's now in scrape_content
+        prompt = f"""
+Act as a decision making analyst following instructions. Does the the given content substantiate responding to question: "{user_query[:200]}"
 
-            # Update status for page selection
-            self.message_handler.send_progress_update(
-                "selecting",
-                "Selecting relevant pages...",
-                {"results_count": len(results)}
-            )
+Given new Content:
+{self._format_content(scraped_content)}
 
-            if self.stop_requested:
-                return None
+Given previous Content:
+{self._summarize_previous_findings()}
 
-            selected_urls = self.select_relevant_pages(results, query)
-            if not selected_urls:
-                message_queue.put({
-                    "type": "result",
-                    "message": "No relevant pages found.",
-                    "data": {
-                        "result": "No relevant pages found.",
-                        "research_details": self.message_handler.research_details
-                    },
-                    "timestamp": datetime.now().isoformat()
-                })
-                return "No relevant pages found."
+Instructions for your decision making:
+1. Compare new content with previous findings
+2. Identify:
+   - What new information was discovered
+   - What gaps still remain
+   - What contradictions need resolution
+   - What aspects need verification
 
-            # Update status for content scraping
-            self.message_handler.send_progress_update(
-                "scraping",
-                "Retrieving content from selected pages...",
-                {"urls_count": len(selected_urls)}
-            )
+Determine if:
+A) Content is sufficient to respons to the question when:
+   - Core question is answered
+   - Key claims are verified
+   - Confidence is high
 
-            if self.stop_requested:
-                return None
+B) Need refinement ('refine') when:
+   - Important gaps remain
+   - Claims need verification
+   - Contradictions exist
+   - Confidence is low
 
-            scraped_content = self.scrape_content(selected_urls)
-            if not scraped_content:
-                message_queue.put({
-                    "type": "result",
-                    "message": "Failed to retrieve content.",
-                    "data": {
-                        "result": "Failed to retrieve content.",
-                        "research_details": self.message_handler.research_details
-                    },
-                    "timestamp": datetime.now().isoformat()
-                })
-                return "Failed to retrieve content."
+Response Format:
+Decision: [answer/refine]
+Evaluation: [Detailed evaluation of content quality and relevance]
+NextSteps: [specific aspects to target next to improve the search quality]
+"""
+        # Record LLM interaction
+        response = self.llm.generate(prompt, max_tokens=200)
+        self.message_handler.add_llm_interaction(prompt, response, "content_evaluation")
 
-            # Store full content and update knowledge graph
-            for url, content in scraped_content.items():
-                self.message_handler.add_scraped_content(url, content)
-                self.message_handler.update_knowledge_graph(content)
+        # Parse response
+        evaluation = ""
+        decision = "refine"
+        for line in response.strip().split('\n'):
+            if line.startswith('Evaluation:'):
+                evaluation = line.split(':', 1)[1].strip()
+            elif line.startswith('Decision:'):
+                decision = line.split(':', 1)[1].strip().lower()
 
-            # Generate answer with thinking process
-            prompt = f"""
-            Analyze the following content to answer the query: "{query}"
-            
-            Content:
-            {self.format_scraped_content(scraped_content)}
-            
-            Think through this step by step:
-            1. What are the key pieces of information?
-            2. How do they relate to the query?
-            3. What conclusions can we draw?
-            4. What are the limitations or uncertainties?
-            
-            Then provide a comprehensive answer.
-            """
-            
-            # Record LLM interaction
-            response = self.llm.generate(prompt, max_tokens=1000)
-            self.message_handler.add_llm_interaction(prompt, response, "answer_generation")
+        return evaluation, decision
 
-            # Extract findings
-            findings = self.extract_key_findings("\n".join(scraped_content.values()))
+    def generate_answer(self, user_query: str, scraped_content: Dict[str, str]) -> str:
+        """Generate final answer with comprehensive synthesis"""
+        prompt = f"""
+Answer this question using the provided content:
+"{user_query[:200]}"
 
-            # Format final answer
-            final_answer = self.format_final_answer(response, findings)
+Content:
+{self._format_content(scraped_content)}
 
-            # Send final result with all details
-            message_queue.put({
+Synthesis Instructions:
+1. Information Integration:
+   - Combine insights from all sources
+   - Cross-reference key points
+   - Resolve any contradictions
+   - Note source agreement/disagreement
+
+2. Confidence Assessment:
+   For each key point, indicate:
+   - Confidence level (High/Medium/Low)
+   - Number of sources confirming
+   - Quality of supporting evidence
+   - Any contradicting information
+
+3. Answer Structure:
+   - Start with strongest, verified claims
+   - Build supporting details
+   - Address uncertainties
+   - Note limitations
+
+4. Quality Checks:
+   - Verify claims against sources
+   - Check for logical consistency
+   - Maintain accuracy
+
+5. Clarity:
+   - Use clear, precise language
+   - Organize logically
+   - Highlight key insights
+   - Note confidence levels
+
+Answer:
+[
+Answer in clear bullet points. with each bullet not morethan 5 lines. 
+]
+"""
+        # Record LLM interaction
+        response = self.llm.generate(prompt, max_tokens=10000)
+        self.message_handler.add_llm_interaction(prompt, response, "answer_generation")
+
+        return response.strip()
+
+    def _format_content(self, content: Dict[str, str]) -> str:
+        """Format content for LLM"""
+        formatted = []
+        for url, text in content.items():
+            text = re.sub(r'\s+', ' ', text)
+            formatted.append(f"Content from {url}:\n{text}\n")
+        return "\n".join(formatted)
+
+    def search_and_improve(self, query: str) -> None:
+        """Main research function with proper status updates"""
+        attempt = 0
+        best_content = {}  # Track best content across attempts
+        best_confidence = 0  # Track confidence in best content
+        
+        while attempt < self.max_attempts and not self.stop_requested:
+            try:
+                self.message_handler.send_progress_update(
+                    "searching",
+                    f"Search attempt {attempt + 1}",
+                    outcome=f"Starting attempt {attempt + 1} of {self.max_attempts}"
+                )
+
+                # Formulate query
+                search_query, time_range = self.formulate_query(query, attempt)
+                if not search_query:
+                    attempt += 1
+                    continue
+
+                # Perform search
+                results = self.perform_search(search_query, time_range)
+                if not results:
+                    attempt += 1
+                    continue
+
+                # Select pages
+                selected_urls = self.select_relevant_pages(results, query)
+                if not selected_urls:
+                    attempt += 1
+                    continue
+
+                # Scrape content
+                scraped_content = self.scrape_content(selected_urls)
+                if not scraped_content:
+                    attempt += 1
+                    continue
+
+                # Calculate current content confidence
+                current_confidence = self._calculate_content_confidence(scraped_content)
+                
+                # Update best content if this attempt is better
+                if current_confidence > best_confidence:
+                    best_content = scraped_content
+                    best_confidence = current_confidence
+
+                # Evaluate content
+                evaluation, decision = self.evaluate_content(query, scraped_content)
+                
+                if decision == "answer" or attempt == self.max_attempts - 1:
+                    # Use best content found so far
+                    answer = self.generate_answer(query, best_content)
+                    
+                    # Send final result
+                    queue = self.message_queues.get(self.session_id)
+                    if queue:
+                        # Send result first
+                        queue.put({
+                            "type": "result",
+                            "message": answer,
+                            "data": {
+                                "result": answer,
+                                "research_details": {
+                                    "urls_accessed": list(self.message_handler.research_details["urls_accessed"]),
+                                    "successful_urls": list(self.message_handler.research_details["successful_urls"]),
+                                    "failed_urls": list(self.message_handler.research_details["failed_urls"]),
+                                    "content_summaries": self.message_handler.research_details["content_summaries"],
+                                    "analysis_steps": self.message_handler.research_details["analysis_steps"],
+                                    "source_metrics": self.message_handler.research_details["source_metrics"],
+                                    "llm_interactions": self.message_handler.research_details["llm_interactions"],
+                                    "scraped_content": self.message_handler.research_details["scraped_content"],
+                                    "knowledge_graph": self.message_handler.research_details["knowledge_graph"]
+                                },
+                                "confidence": best_confidence
+                            },
+                            "timestamp": datetime.now().isoformat()
+                        })
+                        
+                        # Then send completed status
+                        queue.put({
+                            "type": "status",
+                            "message": "Research completed",
+                            "data": {
+                                "status": "completed",
+                                "result": answer,
+                                "confidence": best_confidence
+                            },
+                            "timestamp": datetime.now().isoformat()
+                        })
+                    return
+                
+                attempt += 1
+
+            except Exception as e:
+                logger.error(f"Error in search attempt: {str(e)}")
+                attempt += 1
+
+        # If we reach here, use best content found
+        if best_content:
+            answer = self.generate_answer(query, best_content)
+        else:
+            answer = "Based on the available information, I cannot provide a complete answer. Please try rephrasing your query."
+
+        # Send final result
+        queue = self.message_queues.get(self.session_id)
+        if queue:
+            queue.put({
                 "type": "result",
-                "message": final_answer,
+                "message": answer,
                 "data": {
-                    "result": final_answer,
-                    "sources_analyzed": self.message_handler.sources_analyzed,
-                    "current_focus": self.message_handler.current_focus,
+                    "result": answer,
                     "research_details": {
                         "urls_accessed": list(self.message_handler.research_details["urls_accessed"]),
                         "successful_urls": list(self.message_handler.research_details["successful_urls"]),
@@ -470,127 +602,64 @@ class AsyncSearchEngine(EnhancedSelfImprovingSearch):
                         "scraped_content": self.message_handler.research_details["scraped_content"],
                         "knowledge_graph": self.message_handler.research_details["knowledge_graph"]
                     },
-                    "findings": findings
+                    "confidence": best_confidence
                 },
                 "timestamp": datetime.now().isoformat()
             })
-
-            # Update final status
-            message_queue.put({
+            
+            # Send completed status
+            queue.put({
                 "type": "status",
+                "message": "Research completed",
                 "data": {
                     "status": "completed",
-                    "sources_analyzed": self.message_handler.sources_analyzed,
-                    "current_focus": self.message_handler.current_focus,
-                    "research_details": self.message_handler.research_details
+                    "result": answer,
+                    "confidence": best_confidence
                 },
                 "timestamp": datetime.now().isoformat()
             })
 
-            return final_answer
+    def _calculate_content_confidence(self, content: Dict[str, str]) -> int:
+        """Calculate confidence score for content"""
+        if not content:
+            return 0
+            
+        total_score = 0
+        for url in content.keys():
+            if url in self.message_handler.research_details["source_metrics"]:
+                total_score += self.message_handler.research_details["source_metrics"][url]["reliability"]
+                
+        # Average reliability, scaled to 0-100
+        return min(100, total_score // len(content)) if content else 0
 
-        except Exception as e:
-            logger.error(f"Error in single search: {str(e)}")
-            if message_queue:
-                message_queue.put({
-                    "type": "error",
-                    "message": f"Search error: {str(e)}",
-                    "data": {"research_details": self.message_handler.research_details},
-                    "timestamp": datetime.now().isoformat()
-                })
-            return f"Search error: {str(e)}"
-
-    def search_and_improve(self, query: str) -> None:
-        """Main search function with WebSocket integration"""
-        try:
-            # Get message queue
-            message_queue = self.message_queues.get(self.session_id)
-            if not message_queue:
-                raise ValueError(f"No message queue found for session {self.session_id}")
-
-            # Update initial status
-            self.message_handler.send_progress_update(
-                "initializing",
-                "Starting research process...",
-                {"query": query}
-            )
-
-            # Determine search mode
-            is_research_mode = self.settings.get("searchMode") == "research"
-
-            if is_research_mode:
-                # Use parent class's search_and_improve for research mode
-                result = super().search_and_improve(query)
-            else:
-                # Simple search mode
-                result = self.perform_single_search(query)
-
-            if self.stop_requested:
-                result = "Research process was stopped by user request."
-
-            # Send final result with all research details
-            if result:
-                message_queue.put({
-                    "type": "result",
-                    "message": result,
-                    "data": {
-                        "result": result,
-                        "sources_analyzed": self.message_handler.sources_analyzed,
-                        "current_focus": self.message_handler.current_focus,
-                        "research_details": {
-                            "urls_accessed": list(self.message_handler.research_details["urls_accessed"]),
-                            "successful_urls": list(self.message_handler.research_details["successful_urls"]),
-                            "failed_urls": list(self.message_handler.research_details["failed_urls"]),
-                            "content_summaries": self.message_handler.research_details["content_summaries"],
-                            "analysis_steps": self.message_handler.research_details["analysis_steps"],
-                            "source_metrics": self.message_handler.research_details["source_metrics"],
-                            "llm_interactions": self.message_handler.research_details["llm_interactions"],
-                            "scraped_content": self.message_handler.research_details["scraped_content"],
-                            "knowledge_graph": self.message_handler.research_details["knowledge_graph"]
-                        }
-                    },
-                    "timestamp": datetime.now().isoformat()
-                })
-
-            # Update final status
-            message_queue.put({
+    def stop(self) -> None:
+        """Stop the research process"""
+        self.stop_requested = True
+        
+        # Send stopped status
+        queue = self.message_queues.get(self.session_id)
+        if queue:
+            queue.put({
                 "type": "status",
+                "message": "Research stopped",
                 "data": {
-                    "status": "completed" if not self.stop_requested else "stopped",
-                    "sources_analyzed": self.message_handler.sources_analyzed,
-                    "current_focus": self.message_handler.current_focus,
-                    "research_details": self.message_handler.research_details
+                    "status": "stopped"
                 },
                 "timestamp": datetime.now().isoformat()
             })
 
-        except Exception as e:
-            logger.error(f"Error in search_and_improve: {str(e)}")
-            if message_queue:
-                message_queue.put({
-                    "type": "error",
-                    "message": f"Search error: {str(e)}",
-                    "data": {"research_details": self.message_handler.research_details},
-                    "timestamp": datetime.now().isoformat()
-                })
+    def _summarize_previous_findings(self) -> str:
+        """Summarize insights from previous search attempts"""
+        findings = []
+        
+        # Add successful URLs and their reliability
+        for url in self.message_handler.research_details["successful_urls"]:
+            if url in self.message_handler.research_details["source_metrics"]:
+                reliability = self.message_handler.research_details["source_metrics"][url]["reliability"]
+                findings.append(f"Source ({reliability}% reliable): {url}")
 
-    def format_final_answer(self, response: str, findings: List[Dict]) -> str:
-        """Format the final answer with findings and insights"""
-        try:
-            # Start with the main response
-            formatted_answer = response.strip()
+        # Add content summaries
+        for summary in self.message_handler.research_details["content_summaries"]:
+            findings.append(f"Finding: {summary}")
 
-            # Add key findings if available
-            if findings:
-                formatted_answer += "\n\nKey Findings:\n"
-                for finding in findings:
-                    confidence = finding.get('confidence', 100)
-                    formatted_answer += f"• {finding['finding']} (Confidence: {confidence}%)\n"
-
-            return formatted_answer
-
-        except Exception as e:
-            logger.error(f"Error formatting final answer: {str(e)}")
-            return response  # Return original response if formatting fails
-
-
+        return "\n".join(findings) if findings else "No previous findings"

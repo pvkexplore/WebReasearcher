@@ -64,17 +64,20 @@ class LLMWrapper:
         
         # Handle max_tokens parameter
         max_tokens = kwargs.get('max_tokens', self.llm_config.get('max_tokens', 1024))
-        if max_tokens > 4096:  # OpenAI typical limit
-            max_tokens = 4096
+        #if max_tokens > 4096:  # OpenAI typical limit
+        #    max_tokens = 4096
 
         data = {
             "model": self.model_name,
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": kwargs.get('temperature', self.llm_config.get('temperature', 0.7)),
-            "top_p": kwargs.get('top_p', self.llm_config.get('top_p', 0.9)),
-            "max_tokens": max_tokens,
-            "stop": kwargs.get('stop', self.llm_config.get('stop', []))
+            "messages": [{"role": "user", "content": prompt}]
+            #,
+            #"temperature": kwargs.get('temperature', self.llm_config.get('temperature', 0.8)),
+            #"top_p": kwargs.get('top_p', self.llm_config.get('top_p', 0.95)),
+            #"max_tokens": max_tokens,
+            #"stop": kwargs.get('stop', self.llm_config.get('stop', []))
         }
+        
+        print(data,'--->')
         
         try:
             response = requests.post(
@@ -94,7 +97,9 @@ class LLMWrapper:
             response_data = response.json()
             if not response_data.get('choices'):
                 raise Exception("No response choices returned from API")
-                
+            
+            print(response_data)    
+            
             return response_data['choices'][0]['message']['content'].strip()
             
         except requests.exceptions.Timeout:
