@@ -66,6 +66,21 @@ function App() {
   );
   const [currentStage, setCurrentStage] = useState<string>("initializing");
 
+  const [researchDetails, setResearchDetails] = useState<{
+    urls_accessed: string[];
+    successful_urls: string[];
+    failed_urls: string[];
+    content_summaries: Array<{
+      url: string;
+      summary: string;
+    }>;
+  }>({
+    urls_accessed: [],
+    successful_urls: [],
+    failed_urls: [],
+    content_summaries: [],
+  });
+
   // WebSocket setup
   const setupWebSocket = (sessionId: string) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
@@ -74,7 +89,6 @@ function App() {
 
     const ws = new WebSocket(`ws://localhost:8000/ws/${sessionId}`);
     wsRef.current = ws;
-
     ws.onopen = () => {
       console.log("WebSocket connected");
       setIsConnected(true);
@@ -169,7 +183,6 @@ function App() {
       setConfidenceScore(data.data.confidence_score || 0);
     }
   };
-
   const handleProgressUpdate = (data: any) => {
     if (data.data) {
       setCurrentFocus(data.data.current_focus);
@@ -179,6 +192,10 @@ function App() {
       // Update current stage
       if (data.data.stage) {
         setCurrentStage(data.data.stage);
+      }
+      // Update research details
+      if (data.data.research_details) {
+        setResearchDetails(data.data.research_details);
       }
     }
   };
@@ -317,7 +334,6 @@ function App() {
     }
   };
 
-  // Reset stage when starting new search
   const startResearch = async () => {
     if (!query.trim()) {
       setError("Please enter a query");
@@ -339,7 +355,14 @@ function App() {
       setDocumentContent(undefined);
       setSources([]);
       setAssessmentResult(undefined);
-      setCurrentStage("initializing"); // Reset stage
+      setCurrentStage("initializing");
+      setResearchDetails({
+        // Reset research details
+        urls_accessed: [],
+        successful_urls: [],
+        failed_urls: [],
+        content_summaries: [],
+      });
 
       // Create session
       const sessionResponse = await fetch("/api/research/start", {
@@ -419,7 +442,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div
+        className={`max-w-7xl mx-auto px-4 py-6 ${
+          showSettings ? "mr-80" : ""
+        } transition-all duration-200`}
+      >
         <ResearchHeader
           status={session?.status || null}
           showSettings={showSettings}
@@ -427,10 +454,9 @@ function App() {
         />
 
         {showSettings && (
-          <SettingsPanel
-            settings={settings}
-            onSettingsChange={setSettings}
-            onReset={() => setSettings(defaultSettings)}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setShowSettings(false)}
           />
         )}
 
@@ -477,6 +503,7 @@ function App() {
               documentContent={documentContent}
               sources={sources}
               stage={currentStage}
+              researchDetails={researchDetails}
             />
           </>
         )}
@@ -488,6 +515,14 @@ function App() {
           onToggleExpand={() => setExpandedMessages(!expandedMessages)}
           isProcessing={isProcessing}
         />
+
+        {showSettings && (
+          <SettingsPanel
+            settings={settings}
+            onSettingsChange={setSettings}
+            onReset={() => setSettings(defaultSettings)}
+          />
+        )}
       </div>
     </div>
   );

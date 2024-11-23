@@ -4043,3 +4043,263 @@ The instructor suggests trying different techniques, such as body scan or loving
 It's worth noting that the video also mentions that Shambhala Meditation Center of Milwaukee offers guided meditations and workshops on their website. If you're interested in learning more about meditation or finding a local center, you can check out their resources.
 
 Overall, meditation is a powerful tool for improving mental health and well-being. With regular practice, you can experience the benefits of reduced stress, improved mood, and increased self-awareness.
+2024-11-23 01:07:02,632 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_010702
+
+2024-11-23 01:07:02,880 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:03,103 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:04,241 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:07:04,241 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:07:06,585 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:07:07,633 - INFO - Successfully scraped: https://www.youtube.com/watch?v=y8UWa_I8vX0
+2024-11-23 01:07:07,633 - INFO - Scraped content received for 1 URLs
+2024-11-23 01:07:10,256 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:10,448 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:10,765 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:11,836 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:07:11,836 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:07:14,106 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:07:15,244 - INFO - Successfully scraped: https://www.youtube.com/watch?v=y8UWa_I8vX0
+2024-11-23 01:07:15,245 - INFO - Scraped content received for 1 URLs
+2024-11-23 01:07:16,673 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:16,940 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:17,165 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:17,587 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:17,730 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:17,923 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:19,045 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:07:19,045 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:07:21,630 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:07:22,960 - INFO - Successfully scraped: https://www.youtube.com/watch?v=2O_JvVyuqbQ
+2024-11-23 01:07:24,643 - INFO - Successfully scraped: https://www.azlyrics.com/lyrics/rebeccaferguson/teachmehowtobeloved.html
+2024-11-23 01:07:24,643 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:07:26,828 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:27,035 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:27,986 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:07:27,986 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:07:31,623 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:07:32,755 - INFO - Successfully scraped: https://www.yahoo.com/lifestyle/51-great-gifts-dad-even-134400573.html
+2024-11-23 01:07:34,115 - INFO - Successfully scraped: https://people.com/christmas-gifts-for-men-8741699
+2024-11-23 01:07:34,115 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:07:37,674 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 01:07:58,528 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:07:59,507 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:08:04,003 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:08:06,297 - INFO - Successfully scraped: https://www.tuko.co.ke/entertainment/celebrities/569954-ababu-namwambas-son-smoothly-drives-dad-desert-drive/
+2024-11-23 01:08:07,247 - INFO - Successfully scraped: https://en.wikipedia.org/wiki/Sean_Combs
+2024-11-23 01:08:07,247 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:08:13,680 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 01:08:13,680 - INFO - LLM Response:
+I will provide a comprehensive answer to the question "Teach me how to be great dad in a week."
+
+The text provided does not mention anything about teaching someone how to be a great dad, but it does mention some of Sean Combs' (Diddy) personal life and career.
+
+Sean Combs is a successful American rapper, record producer, and record executive who has won three Grammy Awards. He founded his own record label, Bad Boy Records, in 1993.
+
+However, the text does not provide any information about teaching someone how to be a great dad. It only mentions that Sean Combs lost his job as the Sports Cabinet secretary in July after President William Ruto reshuffled his Cabinet and was handed over the sports docket by Kipchumba Murkomen.
+
+It also mentions that Diddy (Sean Combs) took a step back from politics and is now on vacation, along with one of his sons who is on holiday. There is no mention of teaching someone how to be a great dad or what steps can be taken to improve parenting skills.
+
+Therefore, I will say that the text does not provide any relevant information about teaching someone how to be a great dad.
+2024-11-23 01:09:34,635 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:09:35,725 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:09:38,075 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:09:41,837 - INFO - Successfully scraped: https://scripturesavvy.com/being-a-good-father/
+2024-11-23 01:09:42,573 - INFO - Successfully scraped: https://meninthearena.org/blogs/equipping-blog-posts/5-leadership-secrets-jesus-used-that-dads-need-to-know-leading-your-kids-how-christ-led-the-twelve-w-barrett-johnson-ep-782
+2024-11-23 01:09:42,573 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:09:47,373 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 01:09:47,373 - INFO - LLM Response:
+To be a great dad in a week, you need to understand the following:
+
+1. Lead by example - This means modeling the behavior and values you want your children to adopt, such as being patient, kind, and honest.
+2. Train up a child in the way he should go - This verse highlights the importance of guiding and training your children, teaching them the ways of righteousness.
+3. Bring them up in the discipline and instruction of the Lord - This verse emphasizes the responsibility of a father to provide a nurturing and supportive environment for his children, and to avoid behaviors that would provoke anger and resentment.
+4. Show compassion to your children - Just as the Lord shows compassion to those who fear him, you can demonstrate love and mercy in your interactions with your children.
+5. Do not embitter your children - Bitterness or discouragement can be devastating for children, so it's essential to avoid behaviors that might cause them to become discouraged.
+
+Additionally, you should prioritize time and effort in nurturing and disciplining your children, understanding the long-term impact of your influence. By following these principles, you can build a strong foundation with your child and shape their lives in ways that will last a lifetime.
+2024-11-23 01:10:15,557 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_011015
+
+2024-11-23 01:10:16,630 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:10:16,630 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:10:19,523 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:10:21,173 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:10:22,482 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:10:30,629 - INFO - Successfully scraped: https://www.fatherhood.org/championing-fatherhood/10-ways-to-be-a-better-dad
+2024-11-23 01:10:32,308 - INFO - Successfully scraped: https://www.ramseysolutions.com/relationships/how-to-be-a-good-dad
+2024-11-23 01:10:32,308 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:10:39,632 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 01:10:40,060 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:10:40,392 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:10:41,424 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:10:41,424 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:10:44,848 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:10:46,487 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:10:50,684 - INFO - Successfully scraped: https://www.psychologytoday.com/us/blog/fixing-families/201103/fathers-sons-how-to-be-a-great-dad
+2024-11-23 01:10:50,684 - INFO - Scraped content received for 1 URLs
+2024-11-23 01:10:57,473 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:10:58,516 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:10:58,523 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:11:03,673 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:11:05,675 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:11:08,547 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:11:13,000 - INFO - Successfully scraped: https://www.fatherhood.org/championing-fatherhood/10-ways-to-be-a-better-dad
+2024-11-23 01:11:13,933 - INFO - Successfully scraped: https://www.wikihow.com/Be-a-Good-Father
+2024-11-23 01:11:13,933 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:11:21,069 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 01:11:21,608 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:11:22,626 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:11:22,626 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:11:25,573 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:11:31,698 - WARNING - Robots.txt disallows scraping of https://cpn3.gunowners.org/envit4/best-dad.html
+2024-11-23 01:11:31,698 - INFO - Scraped content received for 0 URLs
+2024-11-23 01:11:32,172 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:11:33,260 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:11:33,260 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:11:36,689 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:11:39,457 - INFO - Successfully scraped: https://www.ramseysolutions.com/relationships/how-to-be-a-good-dad
+2024-11-23 01:11:39,457 - INFO - Scraped content received for 1 URLs
+2024-11-23 01:11:45,231 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 01:11:45,450 - INFO - LLM Output in synthesize_final_answer:
+
+2024-11-23 01:27:54,175 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_012753
+
+2024-11-23 01:27:55,335 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:27:59,873 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:28:01,864 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:28:05,681 - INFO - Successfully scraped: https://www.gotquestions.org/thousand-year-reign-Christ.html
+2024-11-23 01:28:07,345 - INFO - Successfully scraped: https://en.wikipedia.org/wiki/New_Gods
+2024-11-23 01:28:07,345 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:28:11,450 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 01:28:11,450 - INFO - LLM Response:
+There are no new gods for the past 1000 years because the New Gods were split into two planets, New Genesis and Apokolips, which have been at war for thousands of years. The Old Gods died during Ragnarök, a catastrophic event that occurred around 1,000 years ago in both planets. The two planets were once part of the same world called Urgrund, but it was split apart after the death of the Old Gods. As a result, the New Genesis is an idyllic planet with unspoiled forests and mountains, while Apokolips is a nightmarish, polluted dystopia filled with machinery and fire pits, ruled by the tyrannical Darkseid. The two planets were once part of the same world, but they have been at war for thousands of years, resulting in the absence of new gods from this period.
+2024-11-23 01:29:07,310 - INFO - LLM Output in formulate_query:
+Starting message processing for session 20241123_012906
+
+2024-11-23 01:29:07,629 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:29:08,723 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:29:08,723 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:29:11,146 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:29:13,235 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:29:14,908 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:29:24,284 - INFO - Successfully scraped: https://www.gotquestions.org/thousand-year-reign-Christ.html
+2024-11-23 01:29:26,651 - INFO - Successfully scraped: https://www.gotquestions.org/millennial-kingdom.html
+2024-11-23 01:29:26,651 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:29:31,834 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 01:29:32,325 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:29:33,417 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:29:33,417 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:29:35,223 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:29:36,677 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:29:38,732 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:29:40,473 - INFO - Successfully scraped: https://en.wikipedia.org/wiki/History_of_Hinduism
+2024-11-23 01:29:43,054 - INFO - Successfully scraped: https://en.wikipedia.org/wiki/List_of_new_religious_movements
+2024-11-23 01:29:43,054 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:29:48,673 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 01:29:49,377 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:29:50,423 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:29:50,423 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:29:52,283 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:29:53,843 - INFO - Successfully scraped: https://dc.fandom.com/wiki/New_Gods
+2024-11-23 01:29:55,414 - INFO - Successfully scraped: https://en.wikipedia.org/wiki/List_of_people_who_have_been_considered_deities
+2024-11-23 01:29:55,414 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:29:59,573 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 01:30:00,053 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:30:01,125 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:30:01,125 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:30:04,215 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:30:05,759 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:30:07,625 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:30:16,331 - INFO - Successfully scraped: https://www.christianevidence.net/2019/01/gods-7000-year-plan.html
+2024-11-23 01:30:20,596 - INFO - Successfully scraped: https://rcg.org/questions/p140.a.html
+2024-11-23 01:30:20,596 - INFO - Scraped content received for 2 URLs
+2024-11-23 01:30:28,044 - WARNING - Failed to get a valid decision in evaluate_scraped_content. Defaulting to 'refine'.
+2024-11-23 01:30:28,523 - INFO - LLM Output in formulate_query:
+
+2024-11-23 01:30:29,653 - INFO - DDG Output in perform_search:
+
+2024-11-23 01:30:29,653 - ERROR - Error displaying search results: 'AsyncSearchEngine' object has no attribute 'last_query'
+2024-11-23 01:30:32,107 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:30:33,659 - INFO - LLM Output in select_relevant_pages:
+
+2024-11-23 01:30:36,623 - INFO - Successfully scraped: https://www.ancient-origins.net/opinion-guest-authors/those-who-once-reigned-experts-name-famous-and-forgotten-ancient-gods-006383
+2024-11-23 01:30:36,623 - INFO - Scraped content received for 1 URLs
+2024-11-23 01:30:42,185 - INFO - LLM Output in generate_final_answer:
+
+2024-11-23 01:30:42,185 - INFO - LLM Response:
+The ancient origins expert stated that there are no new gods for the past 1000 years because of a significant reversal in symbolism. This reversal suggests that an earlier tradition, which was less well-known and comes out of the Sakti Cult, is based on an original feminine deity named Amma. However, this name and meaning have been reversed to accommodate an ambiguous definition by the Dogon as both male and female. Additionally, another important deity would be King of the World, often identified by his followers with a beneficent culture bearer who taught the path to God but eventually experienced a fall and met an untimely demise through torture and murder.

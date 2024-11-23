@@ -13,6 +13,12 @@ class WebSocketMessageHandler:
         self.message_queues = message_queues
         self.sources_analyzed = 0
         self.current_focus = None
+        self.research_details = {
+            "urls_accessed": set(),
+            "successful_urls": set(),
+            "failed_urls": set(),
+            "content_summaries": []
+        }
 
     def send_progress_update(self, stage: str, message: str, data: Optional[Dict] = None) -> None:
         """Send a progress update through the WebSocket"""
@@ -27,6 +33,12 @@ class WebSocketMessageHandler:
                 "current_focus": self.current_focus,
                 "sources_analyzed": self.sources_analyzed,
                 "stage": stage,
+                "research_details": {
+                    "urls_accessed": list(self.research_details["urls_accessed"]),
+                    "successful_urls": list(self.research_details["successful_urls"]),
+                    "failed_urls": list(self.research_details["failed_urls"]),
+                    "content_summaries": self.research_details["content_summaries"]
+                },
                 **(data or {})
             },
             "timestamp": datetime.now().isoformat()
@@ -45,7 +57,21 @@ class WebSocketMessageHandler:
             self.send_progress_update("scraping", message.message)
         elif "Successfully scraped:" in message.message:
             self.sources_analyzed += 1
+            url = message.message.replace("Successfully scraped:", "").strip()
+            self.research_details["urls_accessed"].add(url)
+            self.research_details["successful_urls"].add(url)
+            if message.data and "content" in message.data:
+                self.research_details["content_summaries"].append({
+                    "url": url,
+                    "summary": message.data["content"][:200] + "..."  # Store summary
+                })
             self.send_progress_update("analyzing", message.message)
+        elif "Failed to scrape:" in message.message or "Robots.txt disallows scraping of" in message.message:
+            url = message.message.split()[-1].strip()
+            self.research_details["urls_accessed"].add(url)
+            self.research_details["failed_urls"].add(url)
+            # Don't update stage for failed scrapes
+            self.send_progress_update("scraping", "Continuing with available sources...")
         elif "Search attempt" in message.message:
             self.send_progress_update("searching", message.message)
         elif "Formulated query:" in message.message:
@@ -67,6 +93,12 @@ class WebSocketMessageHandler:
                 "data": {
                     "current_focus": self.current_focus,
                     "sources_analyzed": self.sources_analyzed,
+                    "research_details": {
+                        "urls_accessed": list(self.research_details["urls_accessed"]),
+                        "successful_urls": list(self.research_details["successful_urls"]),
+                        "failed_urls": list(self.research_details["failed_urls"]),
+                        "content_summaries": self.research_details["content_summaries"]
+                    },
                     **(message.data or {})
                 },
                 "timestamp": message.timestamp
@@ -181,7 +213,7 @@ class AsyncSearchEngine(EnhancedSelfImprovingSearch):
                 # Simple search mode
                 result = self.perform_single_search(query)
 
-            # Send final result
+            # Send final result with research details
             if result:
                 message_queue.put({
                     "type": "result",
@@ -189,7 +221,13 @@ class AsyncSearchEngine(EnhancedSelfImprovingSearch):
                     "data": {
                         "result": result,
                         "sources_analyzed": self.message_handler.sources_analyzed,
-                        "current_focus": self.message_handler.current_focus
+                        "current_focus": self.message_handler.current_focus,
+                        "research_details": {
+                            "urls_accessed": list(self.message_handler.research_details["urls_accessed"]),
+                            "successful_urls": list(self.message_handler.research_details["successful_urls"]),
+                            "failed_urls": list(self.message_handler.research_details["failed_urls"]),
+                            "content_summaries": self.message_handler.research_details["content_summaries"]
+                        }
                     },
                     "timestamp": datetime.now().isoformat()
                 })
@@ -200,7 +238,8 @@ class AsyncSearchEngine(EnhancedSelfImprovingSearch):
                 "data": {
                     "status": "completed",
                     "sources_analyzed": self.message_handler.sources_analyzed,
-                    "current_focus": self.message_handler.current_focus
+                    "current_focus": self.message_handler.current_focus,
+                    "research_details": self.message_handler.research_details
                 },
                 "timestamp": datetime.now().isoformat()
             })
@@ -227,7 +266,8 @@ class AsyncSearchEngine(EnhancedSelfImprovingSearch):
                 "data": {
                     "status": "stopped",
                     "sources_analyzed": self.message_handler.sources_analyzed,
-                    "current_focus": self.message_handler.current_focus
+                    "current_focus": self.message_handler.current_focus,
+                    "research_details": self.message_handler.research_details
                 },
                 "timestamp": datetime.now().isoformat()
             })

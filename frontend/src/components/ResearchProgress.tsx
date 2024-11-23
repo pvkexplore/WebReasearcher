@@ -9,6 +9,15 @@ interface ResearchProgressProps {
   documentContent?: string;
   sources: string[];
   stage?: string;
+  researchDetails?: {
+    urls_accessed: string[];
+    successful_urls: string[];
+    failed_urls: string[];
+    content_summaries: Array<{
+      url: string;
+      summary: string;
+    }>;
+  };
 }
 
 export const ResearchProgress: React.FC<ResearchProgressProps> = ({
@@ -17,6 +26,7 @@ export const ResearchProgress: React.FC<ResearchProgressProps> = ({
   documentContent,
   sources,
   stage = "initializing",
+  researchDetails,
 }) => {
   // Helper function to get stage display text and description
   const getStageInfo = (
@@ -117,56 +127,103 @@ export const ResearchProgress: React.FC<ResearchProgressProps> = ({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="bg-green-50 rounded-lg p-4 border border-green-100">
-          <div className="text-sm font-medium text-green-800 mb-1">
-            Sources Analyzed
+      {/* Research Details */}
+      {researchDetails && (
+        <div className="mt-4 space-y-4">
+          {/* URLs Status */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-green-50 rounded-lg p-4 border border-green-100">
+              <div className="text-sm font-medium text-green-800">
+                Sources Analyzed
+              </div>
+              <div className="text-2xl font-semibold text-green-900">
+                {sourcesAnalyzed}
+              </div>
+            </div>
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+              <div className="text-sm font-medium text-blue-800">
+                Successful URLs
+              </div>
+              <div className="text-2xl font-semibold text-blue-900">
+                {researchDetails.successful_urls.length}
+              </div>
+            </div>
+            <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-100">
+              <div className="text-sm font-medium text-yellow-800">
+                Failed URLs
+              </div>
+              <div className="text-2xl font-semibold text-yellow-900">
+                {researchDetails.failed_urls.length}
+              </div>
+            </div>
           </div>
-          <div className="text-2xl font-semibold text-green-900">
-            {sourcesAnalyzed}
-          </div>
-        </div>
-        <div className="bg-purple-50 rounded-lg p-4 border border-purple-100">
-          <div className="text-sm font-medium text-purple-800 mb-1">
-            Research Mode
-          </div>
-          <div className="text-lg font-semibold text-purple-900">
-            {currentFocus ? "Strategic Research" : "Basic Search"}
-          </div>
-        </div>
-      </div>
 
-      {sources.length > 0 && (
-        <div className="mt-4">
-          <h4 className="text-md font-medium text-gray-900 mb-2">
-            Analyzed Sources
-          </h4>
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-100 max-h-48 overflow-y-auto">
-            <ul className="space-y-2">
-              {sources.map((source, index) => (
-                <li
-                  key={index}
-                  className="text-sm text-blue-600 hover:text-blue-800 truncate"
-                >
-                  <a
-                    href={source}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center"
-                  >
-                    <svg
-                      className="h-4 w-4 mr-2"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+          {/* Content Summaries */}
+          {researchDetails.content_summaries.length > 0 && (
+            <div className="mt-4">
+              <h4 className="text-md font-medium text-gray-900 mb-2">
+                Content Summaries
+              </h4>
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-100 max-h-48 overflow-y-auto">
+                <div className="space-y-4">
+                  {researchDetails.content_summaries.map((summary, index) => (
+                    <div
+                      key={index}
+                      className="border-l-4 border-blue-500 pl-3"
                     >
-                      <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                      <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                    </svg>
-                    {source}
-                  </a>
-                </li>
-              ))}
-            </ul>
+                      <a
+                        href={summary.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        {new URL(summary.url).hostname}
+                      </a>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {summary.summary}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* URLs List */}
+          <div className="mt-4">
+            <h4 className="text-md font-medium text-gray-900 mb-2">
+              Accessed Sources
+            </h4>
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-100 max-h-48 overflow-y-auto">
+              <div className="space-y-2">
+                {researchDetails.urls_accessed.map((url, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center space-x-2 ${
+                      researchDetails.failed_urls.includes(url)
+                        ? "text-red-600"
+                        : "text-green-600"
+                    }`}
+                  >
+                    <span
+                      className={`h-2 w-2 rounded-full ${
+                        researchDetails.failed_urls.includes(url)
+                          ? "bg-red-500"
+                          : "bg-green-500"
+                      }`}
+                    />
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm hover:underline truncate"
+                    >
+                      {url}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
